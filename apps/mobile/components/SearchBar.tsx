@@ -1,5 +1,5 @@
-import { View, TextInput } from 'react-native';
-import { colors } from '@/lib/theme';
+import { View, Text, TextInput } from 'react-native';
+import { colors, radius } from '@/lib/theme';
 
 interface SearchBarProps {
   value: string;
@@ -8,11 +8,10 @@ interface SearchBarProps {
 
 export function SearchBar({ value, onChange }: SearchBarProps) {
   return (
-    <View className="flex-row items-center bg-gray-100 rounded-xl px-4 py-3">
-      <Text className="mr-2 text-base" style={{ color: colors.textMuted }}>🔍</Text>
+    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colors.fill, borderRadius: radius.lg, paddingHorizontal: 16, paddingVertical: 12 }}>
+      <Text style={{ marginRight: 8, fontSize: 16, color: colors.textMuted }}>🔍</Text>
       <TextInput
-        className="flex-1 text-base"
-        style={{ color: colors.text }}
+        style={{ flex: 1, fontSize: 15, color: colors.text }}
         placeholder="Search by postal code..."
         placeholderTextColor={colors.textMuted}
         value={value}

@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Pressable, TextInput, Platform } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { colors, radius, shadow } from '@/lib/theme';
+import type { ReactNode } from 'react';
 
 const STEPS = ['Personal', 'Employment', 'References', 'Review'];
 
@@ -198,7 +199,7 @@ function FormField({ label, value, onChange, keyboard, multiline, style, prefix 
   );
 }
 
-function SummarySection({ title, children }: { title: string; children: React.ReactNode }) {
+function SummarySection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <View style={{ backgroundColor: colors.fillTertiary, borderRadius: radius.lg, padding: 14 }}>
       <Text style={{ fontSize: 12, fontWeight: '700', color: colors.textMuted, marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>

@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import { colors } from '@/lib/theme';
+import { colors, radius } from '@/lib/theme';
 import type { ListingStatus } from '@rent-central/core';
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string }> = {
@@ -18,10 +18,9 @@ export function StatusBadge({ status }: StatusBadgeProps) {
 
   return (
     <View
-      className="px-2.5 py-1 rounded-full"
-      style={{ backgroundColor: config.bg }}
+      style={{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: radius.full, backgroundColor: config.bg }}
     >
-      <Text className="text-xs font-semibold" style={{ color: config.text }}>
+      <Text style={{ fontSize: 11, fontWeight: '600', color: config.text }}>
         {config.label}
       </Text>
     </View>

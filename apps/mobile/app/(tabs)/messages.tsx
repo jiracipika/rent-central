@@ -4,9 +4,9 @@ import { router } from 'expo-router';
 import { colors, radius, shadow } from '@/lib/theme';
 
 const CONVERSATIONS = [
-  { id: '1', name: 'Sarah Chen', initials: 'SC', property: 'Modern Downtown Loft', lastMessage: 'Thanks for your application! I'll review it shortly.', time: '2m ago', unread: 2, online: true, color: '#3B82F6' },
+  { id: '1', name: 'Sarah Chen', initials: 'SC', property: 'Modern Downtown Loft', lastMessage: 'Thanks for your application! I\'ll review it shortly.', time: '2m ago', unread: 2, online: true, color: '#3B82F6' },
   { id: '2', name: 'Marc Tremblay', initials: 'MT', property: 'Cozy Plateau Studio', lastMessage: 'Is the apartment still available for May 1st?', time: '1h ago', unread: 0, online: false, color: '#8B5CF6' },
-  { id: '3', name: 'Emily Park', initials: 'EP', property: 'Yaletown Condo', lastMessage: 'When can you schedule a viewing? I'm flexible on weekends.', time: '3h ago', unread: 0, online: true, color: '#10B981' },
+  { id: '3', name: 'Emily Park', initials: 'EP', property: 'Yaletown Condo', lastMessage: 'When can you schedule a viewing? I\'m flexible on weekends.', time: '3h ago', unread: 0, online: true, color: '#10B981' },
   { id: '4', name: 'Lena Kowalski', initials: 'LK', property: 'Bridgeland Basement', lastMessage: 'Application approved! Please review the lease agreement.', time: '1d ago', unread: 1, online: false, color: '#F59E0B' },
   { id: '5', name: 'James Park', initials: 'JP', property: 'Annex Victorian', lastMessage: 'Happy to answer any questions about the property.', time: '2d ago', unread: 0, online: false, color: '#EF4444' },
 ];
