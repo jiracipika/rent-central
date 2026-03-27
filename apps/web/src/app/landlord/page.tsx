@@ -29,7 +29,7 @@ export default function LandlordDashboard() {
           <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Landlord Dashboard</h1>
           <p className="mt-1 text-sm text-gray-400">Manage your properties and applications</p>
         </div>
-        <Link href="/landlord/listings/new" className="bg-blue-600 text-white font-medium px-5 py-2.5 rounded-full hover:bg-blue-700 transition-all">
+        <Link href="/landlord/create-listing" className="bg-blue-600 text-white font-medium px-5 py-2.5 rounded-full hover:bg-blue-700 transition-all">
           + Create Listing
         </Link>
       </div>

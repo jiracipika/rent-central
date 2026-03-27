@@ -18,7 +18,7 @@ export default function NavBar() {
   const landlordLinks = [
     { href: '/landlord', label: 'Dashboard' },
     { href: '/landlord/listings', label: 'My Listings' },
-    { href: '/landlord/applications', label: 'Applicants' },
+    { href: '/landlord/create-listing', label: 'Post Listing' },
     { href: '/messages', label: 'Messages' },
   ];
 

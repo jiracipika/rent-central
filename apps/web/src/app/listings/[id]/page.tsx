@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { use, useState } from 'react';
 import Link from 'next/link';
 
 const mockListings = [
@@ -15,7 +15,8 @@ const mockListings = [
 ];
 
 export default function ListingDetail({ params }: { params: Promise<{ id: string }> }) {
-  const listing = mockListings.find((l) => l.id === params.then(p => p.id).toString()) || mockListings[0];
+  const { id } = use(params);
+  const listing = mockListings.find((l) => l.id === id) || mockListings[0];
   const [term, setTerm] = useState('12');
   const [saved, setSaved] = useState(false);
 
