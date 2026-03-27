@@ -132,6 +132,18 @@
       "namedRegex": "^/bookmarks(?:/)?$"
     },
     {
+      "page": "/contracts",
+      "regex": "^/contracts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/contracts(?:/)?$"
+    },
+    {
+      "page": "/dashboard",
+      "regex": "^/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard(?:/)?$"
+    },
+    {
       "page": "/landlord",
       "regex": "^/landlord(?:/)?$",
       "routeKeys": {},
