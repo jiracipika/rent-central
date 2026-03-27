@@ -6,7 +6,6 @@ import type { UserRole } from '@rent-central/core';
 
 export default function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  // In a real app, this comes from auth context
   const role: UserRole | null = null;
 
   const renterLinks = [
@@ -33,42 +32,41 @@ export default function NavBar() {
   const links = role === 'admin' ? adminLinks : role === 'landlord' ? landlordLinks : renterLinks;
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl text-gray-900">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-200">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex items-center justify-between h-14">
+          <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-gray-900 tracking-tight">
             🏠 Rent Central
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-8">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                className="text-sm text-gray-500 hover:text-gray-900 transition-all duration-300 ease-out"
               >
                 {link.label}
               </Link>
             ))}
             {role && (
               <Link href="/notifications" className="relative">
-                <span className="text-gray-600 hover:text-gray-900 text-lg">🔔</span>
+                <span className="text-gray-400 hover:text-gray-600 text-lg transition-all duration-300 ease-out">🔔</span>
                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
               </Link>
             )}
             {role ? (
-              <Link href="/profile" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              <Link href="/profile" className="text-sm text-gray-500 hover:text-gray-900 transition-all duration-300 ease-out">
                 Profile
               </Link>
             ) : (
-              <div className="flex gap-3">
-                <Link href="/sign-in" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              <div className="flex items-center gap-3">
+                <Link href="/sign-in" className="text-sm text-gray-500 hover:text-gray-900 transition-all duration-300 ease-out">
                   Sign In
                 </Link>
                 <Link
                   href="/sign-up"
-                  className="text-sm font-medium bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="text-sm font-medium bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition-all duration-300 ease-out"
                 >
                   Sign Up
                 </Link>
@@ -76,13 +74,12 @@ export default function NavBar() {
             )}
           </nav>
 
-          {/* Mobile hamburger */}
           <button
-            className="md:hidden p-2 text-gray-600"
+            className="md:hidden p-2 text-gray-500"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               {menuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
@@ -92,14 +89,13 @@ export default function NavBar() {
           </button>
         </div>
 
-        {/* Mobile menu */}
         {menuOpen && (
-          <nav className="md:hidden pb-4 space-y-2">
+          <nav className="md:hidden pb-6 pt-2 space-y-1">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="block text-sm font-medium text-gray-600 hover:text-gray-900 py-1"
+                className="block text-sm text-gray-500 hover:text-gray-900 py-2 transition-all duration-300 ease-out"
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}
@@ -107,21 +103,13 @@ export default function NavBar() {
             ))}
             {role ? (
               <>
-                <Link href="/notifications" className="block text-sm font-medium text-gray-600 py-1" onClick={() => setMenuOpen(false)}>
-                  🔔 Notifications
-                </Link>
-                <Link href="/profile" className="block text-sm font-medium text-gray-600 py-1" onClick={() => setMenuOpen(false)}>
-                  Profile
-                </Link>
+                <Link href="/notifications" className="block text-sm text-gray-500 py-2" onClick={() => setMenuOpen(false)}>🔔 Notifications</Link>
+                <Link href="/profile" className="block text-sm text-gray-500 py-2" onClick={() => setMenuOpen(false)}>Profile</Link>
               </>
             ) : (
               <>
-                <Link href="/sign-in" className="block text-sm font-medium text-gray-600 py-1" onClick={() => setMenuOpen(false)}>
-                  Sign In
-                </Link>
-                <Link href="/sign-up" className="block text-sm font-medium text-blue-600 py-1" onClick={() => setMenuOpen(false)}>
-                  Sign Up
-                </Link>
+                <Link href="/sign-in" className="block text-sm text-gray-500 py-2" onClick={() => setMenuOpen(false)}>Sign In</Link>
+                <Link href="/sign-up" className="block text-sm font-medium text-blue-600 py-2" onClick={() => setMenuOpen(false)}>Sign Up</Link>
               </>
             )}
           </nav>

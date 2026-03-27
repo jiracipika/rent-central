@@ -71,47 +71,48 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-blue-600 to-blue-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-            Find Your Perfect Rental
+      <section className="bg-white pt-32 pb-20">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+            Rent Central
           </h1>
-          <p className="mt-4 text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto">
-            Canada&apos;s most trusted rental marketplace. Browse, apply, pay, and sign — all in one place.
+          <p className="mt-4 text-lg sm:text-xl text-gray-500 max-w-xl mx-auto">
+            Find your perfect rental across Canada
           </p>
-          <div className="mt-8 max-w-md mx-auto">
-            <div className="flex bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="mt-10 max-w-lg mx-auto">
+            <div className="flex bg-white rounded-2xl shadow-sm border border-gray-200 p-2">
               <input
                 type="text"
                 placeholder="Enter postal code (e.g. M5H 1A1)"
-                className="flex-1 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none"
+                className="flex-1 px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none bg-transparent"
               />
-              <button className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-6 py-3 transition-colors">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3 rounded-xl transition-all duration-300 ease-out">
                 Search
               </button>
             </div>
           </div>
-          <p className="mt-3 text-sm text-blue-200">
-            Popular: <span className="underline cursor-pointer">Toronto</span> ·{' '}
-            <span className="underline cursor-pointer">Vancouver</span> ·{' '}
-            <span className="underline cursor-pointer">Montréal</span> ·{' '}
-            <span className="underline cursor-pointer">Calgary</span>
+          <p className="mt-4 text-sm text-gray-400">
+            Popular: <span className="text-gray-600 cursor-pointer hover:text-gray-900 transition-colors">Toronto</span> ·{' '}
+            <span className="text-gray-600 cursor-pointer hover:text-gray-900 transition-colors">Vancouver</span> ·{' '}
+            <span className="text-gray-600 cursor-pointer hover:text-gray-900 transition-colors">Montréal</span> ·{' '}
+            <span className="text-gray-600 cursor-pointer hover:text-gray-900 transition-colors">Calgary</span>
           </p>
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+      <section className="py-24" style={{ background: '#FAFAFA' }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-3xl font-semibold text-center text-gray-900 tracking-tight mb-4">
             Everything You Need to Rent
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <p className="text-center text-gray-400 mb-16">One platform for your entire rental journey</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((f) => (
-              <div key={f.title} className="text-center">
-                <span className="text-4xl">{f.icon}</span>
-                <h3 className="mt-4 text-lg font-semibold text-gray-900">{f.title}</h3>
-                <p className="mt-2 text-sm text-gray-500">{f.desc}</p>
+              <div key={f.title} className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 ease-out">
+                <span className="text-3xl">{f.icon}</span>
+                <h3 className="mt-4 text-base font-semibold text-gray-900 tracking-tight">{f.title}</h3>
+                <p className="mt-2 text-sm text-gray-400 leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -119,45 +120,62 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">How It Works</h2>
-          <p className="text-center text-gray-500 mb-12">Renting in Canada has never been easier</p>
-          <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-3xl font-semibold text-center text-gray-900 tracking-tight mb-4">How It Works</h2>
+          <p className="text-center text-gray-400 mb-12">Renting in Canada has never been easier</p>
+          <div className="rounded-2xl shadow-sm overflow-hidden border border-gray-100">
             <YouTubeEmbed videoId="dQw4w9WgXcQ" title="How Rent Central Works" />
           </div>
         </div>
       </section>
 
       {/* Featured Listings */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Featured Listings</h2>
-            <Link href="/listings" className="text-blue-600 hover:text-blue-700 font-medium text-sm">
+      <section className="py-24" style={{ background: '#FAFAFA' }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">Featured Listings</h2>
+              <p className="mt-1 text-gray-400 text-sm">Handpicked properties across Canada</p>
+            </div>
+            <Link href="/listings" className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-all duration-300 ease-out">
               View all →
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {mockListings.map((listing) => (
-              <Link key={listing.id} href={`/listings/${listing.id}`}>
-                <Card
-                  title={listing.title}
-                  subtitle={`${listing.city}, ${listing.province} · ${formatCurrency(listing.pricePerTerm[12])}/mo`}
-                  className="h-full hover:shadow-md transition-shadow cursor-pointer"
-                >
-                  <div className="mt-2 flex items-center gap-3 text-sm text-gray-500">
-                    <span>{listing.bedrooms === 0 ? 'Studio' : `${listing.bedrooms} Bed`}</span>
-                    <span>·</span>
-                    <span>{listing.bathrooms} Bath</span>
-                    {listing.petFriendly && (
-                      <>
-                        <span>·</span>
-                        <span>🐾</span>
-                      </>
+              <Link key={listing.id} href={`/listings/${listing.id}`} className="group">
+                <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 ease-out overflow-hidden">
+                  {/* Image placeholder */}
+                  <div className="relative h-48 bg-gray-100 flex items-center justify-center">
+                    <span className="text-4xl opacity-40">🏠</span>
+                    {listing.isNew && (
+                      <span className="absolute top-3 left-3 bg-emerald-500 text-white text-xs font-medium px-3 py-1 rounded-full">
+                        New
+                      </span>
                     )}
+                    <button className="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
+                      ♡
+                    </button>
                   </div>
-                </Card>
+                  {/* Details */}
+                  <div className="p-6">
+                    <p className="text-xl font-semibold text-blue-600">{formatCurrency(listing.pricePerTerm[12])}<span className="text-sm font-normal text-gray-400">/mo</span></p>
+                    <h3 className="mt-1 text-base font-semibold text-gray-900 tracking-tight">{listing.title}</h3>
+                    <p className="mt-1 text-sm text-gray-400">{listing.address}, {listing.city}</p>
+                    <div className="mt-3 flex items-center gap-3 text-sm text-gray-400">
+                      <span>{listing.bedrooms === 0 ? 'Studio' : `${listing.bedrooms} Bed`}</span>
+                      <span className="text-gray-200">·</span>
+                      <span>{listing.bathrooms} Bath</span>
+                      {listing.petFriendly && (
+                        <>
+                          <span className="text-gray-200">·</span>
+                          <span>🐾</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </Link>
             ))}
           </div>
@@ -165,22 +183,22 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold">Ready to Find Your Next Home?</h2>
-          <p className="mt-4 text-blue-100 text-lg">
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">Ready to Find Your Next Home?</h2>
+          <p className="mt-4 text-gray-400 text-lg">
             Join thousands of Canadians who found their perfect rental on Rent Central.
           </p>
-          <div className="mt-8 flex justify-center gap-4">
+          <div className="mt-10 flex justify-center gap-4">
             <Link
               href="/sign-up"
-              className="bg-white text-blue-600 font-medium px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors"
+              className="bg-blue-600 text-white font-medium px-8 py-3 rounded-full hover:bg-blue-700 transition-all duration-300 ease-out"
             >
               Get Started
             </Link>
             <Link
               href="/listings"
-              className="border border-white/30 text-white font-medium px-6 py-3 rounded-lg hover:bg-white/10 transition-colors"
+              className="bg-white text-gray-900 font-medium px-8 py-3 rounded-full border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-300 ease-out"
             >
               Browse Listings
             </Link>

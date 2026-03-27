@@ -1,10 +1,11 @@
 export default function Page() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-gray-900">All Applicants</h1>
-      <p className="mt-2 text-gray-500">Review applications for your properties coming soon.</p>
-      <div className="mt-8 rounded-xl border border-gray-100 bg-gray-50 p-12 text-center text-gray-400">
-        Coming soon
+    <div className="max-w-6xl mx-auto px-6 py-20 pt-28">
+      <h1 className="text-2xl font-semibold text-gray-900 tracking-tight"></h1>
+      <p className="mt-2 text-gray-400"></p>
+      <div className="mt-12 bg-white rounded-2xl shadow-sm border border-gray-100 p-16 text-center">
+        <span className="text-5xl"></span>
+        <p className="mt-4 text-gray-400 text-sm">Coming soon</p>
       </div>
     </div>
   );
