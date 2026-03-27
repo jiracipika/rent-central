@@ -133,7 +133,7 @@ export default function ApplicationDetailPage() {
                 <button className="w-full py-3 text-sm font-semibold text-red-600 rounded-full border border-red-200 hover:bg-red-50 transition-colors">Reject</button>
               </>
             )}
-            {application.status === 'pending' && (
+            {(application.status as string) === 'pending' && (
               <button className="w-full rc-btn-primary py-3">Start Review</button>
             )}
             <Link href="/messages/1" className="block w-full rc-btn-ghost border border-gray-200 py-3 text-center">Message Applicant</Link>

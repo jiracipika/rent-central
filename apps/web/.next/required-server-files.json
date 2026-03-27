@@ -99,7 +99,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/home/rs/.openclaw/workspace/rent-central",
+    "outputFileTracingRoot": "/home/rs/rent-central",
     "experimental": {
       "useSkewCookie": false,
       "cacheLife": {
@@ -293,10 +293,10 @@
       "@rent-central/ui"
     ],
     "turbopack": {
-      "root": "/home/rs/.openclaw/workspace/rent-central"
+      "root": "/home/rs/rent-central"
     }
   },
-  "appDir": "/home/rs/.openclaw/workspace/rent-central/apps/web",
+  "appDir": "/home/rs/rent-central/apps/web",
   "relativeAppDir": "apps/web",
   "files": [
     ".next/routes-manifest.json",
