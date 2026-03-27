@@ -124,8 +124,22 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl font-semibold text-center text-gray-900 tracking-tight mb-4">How It Works</h2>
           <p className="text-center text-gray-400 mb-12">Renting in Canada has never been easier</p>
-          <div className="rounded-2xl shadow-sm overflow-hidden border border-gray-100">
-            <YouTubeEmbed videoId="dQw4w9WgXcQ" title="How Rent Central Works" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+            <div className="bg-gray-50 rounded-2xl p-8">
+              <div className="text-3xl mb-3">1️⃣</div>
+              <h3 className="font-semibold text-gray-900">Browse</h3>
+              <p className="mt-1 text-sm text-gray-400">Search verified listings across Canada</p>
+            </div>
+            <div className="bg-gray-50 rounded-2xl p-8">
+              <div className="text-3xl mb-3">2️⃣</div>
+              <h3 className="font-semibold text-gray-900">Apply</h3>
+              <p className="mt-1 text-sm text-gray-400">Submit your application in minutes</p>
+            </div>
+            <div className="bg-gray-50 rounded-2xl p-8">
+              <div className="text-3xl mb-3">3️⃣</div>
+              <h3 className="font-semibold text-gray-900">Move In</h3>
+              <p className="mt-1 text-sm text-gray-400">Sign digitally and get your keys</p>
+            </div>
           </div>
         </div>
       </section>
