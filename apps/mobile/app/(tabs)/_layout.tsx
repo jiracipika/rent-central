@@ -1,4 +1,5 @@
 import { Tabs } from 'expo-router';
+import { Platform } from 'react-native';
 import { TabIcon } from '@/components/TabIcon';
 import { colors } from '@/lib/theme';
 
@@ -8,15 +9,20 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: colors.card,
-          borderTopColor: colors.border,
-          borderTopWidth: 1,
-          height: 85,
-          paddingBottom: 28,
-          paddingTop: 8,
+          backgroundColor: colors.tabBar,
+          borderTopColor: 'rgba(0,0,0,0.06)',
+          borderTopWidth: 0.5,
+          height: Platform.OS === 'ios' ? 88 : 68,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 8,
+          paddingTop: 10,
         },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: '500',
+          letterSpacing: 0.2,
+        },
       }}
     >
       <Tabs.Screen

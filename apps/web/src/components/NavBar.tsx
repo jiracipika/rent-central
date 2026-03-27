@@ -22,69 +22,56 @@ export default function NavBar() {
     { href: '/messages', label: 'Messages' },
   ];
 
-  const adminLinks = [
-    { href: '/admin', label: 'Admin' },
-    { href: '/admin/users', label: 'Users' },
-    { href: '/admin/listings', label: 'Listings' },
-    { href: '/admin/reports', label: 'Reports' },
-  ];
-
-  const links = role === 'admin' ? adminLinks : role === 'landlord' ? landlordLinks : renterLinks;
+  const links = role === 'landlord' ? landlordLinks : renterLinks;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-200">
+    <header className="fixed top-0 left-0 right-0 z-40 glass-card border-b" style={{ borderColor: 'var(--rc-separator)' }}>
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-14">
-          <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-gray-900 tracking-tight">
-            🏠 Rent Central
+          <Link href="/" className="flex items-center gap-2 tracking-tight">
+            <span className="text-lg">🏠</span>
+            <span className="text-[15px] font-semibold" style={{ color: 'var(--rc-text)' }}>Rent Central</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-1">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-gray-500 hover:text-gray-900 transition-all duration-300 ease-out"
+                className="px-3 py-1.5 text-[13px] font-medium rounded-full transition-all duration-200 hover:bg-black/[0.04]"
+                style={{ color: 'var(--rc-muted)' }}
               >
                 {link.label}
               </Link>
             ))}
             {role && (
-              <Link href="/notifications" className="relative">
-                <span className="text-gray-400 hover:text-gray-600 text-lg transition-all duration-300 ease-out">🔔</span>
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+              <Link href="/notifications" className="relative ml-1">
+                <span className="text-base" style={{ color: 'var(--rc-muted)' }}>🔔</span>
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
               </Link>
             )}
             {role ? (
-              <Link href="/profile" className="text-sm text-gray-500 hover:text-gray-900 transition-all duration-300 ease-out">
-                Profile
+              <Link href="/profile" className="ml-2 w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center">
+                <span className="text-xs font-bold" style={{ color: 'var(--rc-primary)' }}>R</span>
               </Link>
             ) : (
-              <div className="flex items-center gap-3">
-                <Link href="/sign-in" className="text-sm text-gray-500 hover:text-gray-900 transition-all duration-300 ease-out">
+              <div className="flex items-center gap-2 ml-3">
+                <Link href="/sign-in" className="text-[13px] font-medium rounded-full px-3 py-1.5 transition-all duration-200 hover:bg-black/[0.04]" style={{ color: 'var(--rc-muted)' }}>
                   Sign In
                 </Link>
-                <Link
-                  href="/sign-up"
-                  className="text-sm font-medium bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition-all duration-300 ease-out"
-                >
+                <Link href="/sign-up" className="rc-btn-primary text-[13px] px-5 py-2">
                   Sign Up
                 </Link>
               </div>
             )}
           </nav>
 
-          <button
-            className="md:hidden p-2 text-gray-500"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-          >
+          <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu" style={{ color: 'var(--rc-text)' }}>
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              {menuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
+              {menuOpen
+                ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+              }
             </svg>
           </button>
         </div>
@@ -95,21 +82,21 @@ export default function NavBar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="block text-sm text-gray-500 hover:text-gray-900 py-2 transition-all duration-300 ease-out"
+                className="block px-3 py-2.5 text-sm rounded-[var(--radius-md)] transition-colors duration-150 hover:bg-black/[0.04]"
+                style={{ color: 'var(--rc-text2)' }}
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
             {role ? (
-              <>
-                <Link href="/notifications" className="block text-sm text-gray-500 py-2" onClick={() => setMenuOpen(false)}>🔔 Notifications</Link>
-                <Link href="/profile" className="block text-sm text-gray-500 py-2" onClick={() => setMenuOpen(false)}>Profile</Link>
-              </>
+              <Link href="/profile" className="block px-3 py-2.5 text-sm rounded-[var(--radius-md)] hover:bg-black/[0.04]" style={{ color: 'var(--rc-text2)' }} onClick={() => setMenuOpen(false)}>Profile</Link>
             ) : (
               <>
-                <Link href="/sign-in" className="block text-sm text-gray-500 py-2" onClick={() => setMenuOpen(false)}>Sign In</Link>
-                <Link href="/sign-up" className="block text-sm font-medium text-blue-600 py-2" onClick={() => setMenuOpen(false)}>Sign Up</Link>
+                <Link href="/sign-in" className="block px-3 py-2.5 text-sm rounded-[var(--radius-md)] hover:bg-black/[0.04]" style={{ color: 'var(--rc-text2)' }} onClick={() => setMenuOpen(false)}>Sign In</Link>
+                <div className="pt-2">
+                  <Link href="/sign-up" className="block text-center rc-btn-primary py-2.5 text-sm" onClick={() => setMenuOpen(false)}>Sign Up</Link>
+                </div>
               </>
             )}
           </nav>
