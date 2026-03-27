@@ -1,5 +1,6 @@
 import { View, Text, FlatList, Pressable, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 import { colors, radius, shadow } from '@/lib/theme';
 
 const CONVERSATIONS = [
@@ -55,6 +56,7 @@ export default function MessagesScreen() {
               backgroundColor: pressed ? colors.fillTertiary : 'transparent',
               borderBottomWidth: 0.5, borderBottomColor: colors.separator,
             })}
+            onPress={() => router.push(`/chat/${item.id}`)}
           >
             {/* Avatar */}
             <View style={{ marginRight: 14, position: 'relative' }}>

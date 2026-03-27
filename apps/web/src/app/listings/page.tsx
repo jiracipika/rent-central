@@ -64,21 +64,21 @@ export default function ListingsPage() {
           <p className="mt-1 text-sm text-gray-400">{filtered.length} properties available</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex bg-gray-100 rounded-lg p-1">
+          <div className="flex bg-white rounded-[var(--radius-md)] p-1 border" style={{ borderColor: 'var(--rc-border)' }}>
             {(['3', '6', '12'] as const).map((t) => (
               <button key={t} onClick={() => setTerm(t)}
-                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${term === t ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
+                className={`px-3 py-1.5 text-sm font-medium rounded-[var(--radius-sm)] transition-all ${term === t ? 'bg-blue-600 text-white shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
                 {t}mo
               </button>
             ))}
           </div>
           <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
-            className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            className="rc-input !py-2 !px-3 text-sm !w-auto">
             <option value="newest">Newest</option>
             <option value="price_asc">Price: Low → High</option>
             <option value="price_desc">Price: High → Low</option>
           </select>
-          <div className="flex bg-gray-100 rounded-lg p-1">
+          <div className="flex bg-white rounded-[var(--radius-md)] p-1 border" style={{ borderColor: 'var(--rc-border)' }}>
             <button onClick={() => setView('grid')} className={`p-1.5 rounded-md transition-all ${view === 'grid' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-400'}`}>
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
             </button>
@@ -90,25 +90,25 @@ export default function ListingsPage() {
       </div>
 
       {/* Filter bar */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-8 flex flex-wrap items-center gap-4">
+      <div className="rc-card-static p-4 mb-8 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-500">Price:</span>
+          <span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Price:</span>
           <input type="number" placeholder="Min" value={priceRange[0] || ''} onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-            className="w-20 text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          <span className="text-gray-300">–</span>
+            className="rc-input w-20 !py-1.5 !px-2 text-sm" />
+          <span style={{ color: 'var(--rc-separator)' }}>–</span>
           <input type="number" placeholder="Max" value={priceRange[1] || ''} onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-            className="w-20 text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            className="rc-input w-20 !py-1.5 !px-2 text-sm" />
         </div>
         <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}
-          className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          className="rc-input !py-1.5 !px-3 text-sm !w-auto">
           {propertyTypes.map((t) => <option key={t} value={t}>{t}</option>)}
         </select>
         <select value={bedFilter} onChange={(e) => setBedFilter(e.target.value)}
-          className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          className="rc-input !py-1.5 !px-3 text-sm !w-auto">
           {bedroomOptions.map((b) => <option key={b} value={b}>{b === 'Any' ? 'Bedrooms' : b === '0' ? 'Studio' : `${b}+ Beds`}</option>)}
         </select>
         <button onClick={() => setPetFilter(!petFilter)}
-          className={`flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border transition-all ${petFilter ? 'bg-blue-50 border-blue-200 text-blue-600' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}>
+          className={`flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-[var(--radius-md)] border transition-all ${petFilter ? 'bg-blue-50 border-blue-200 text-blue-600' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}>
           🐾 Pet Friendly
         </button>
       </div>
@@ -123,8 +123,8 @@ export default function ListingsPage() {
       ) : view === 'grid' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((listing) => (
-            <Link key={listing.id} href={`/listings/${listing.id}`} className="group">
-              <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 ease-out overflow-hidden">
+            <Link key={listing.id} href={`/listings/${listing.id}`} className="group block">
+              <div className="rc-card overflow-hidden">
                 <div className="relative h-48 bg-gray-100 flex items-center justify-center">
                   <span className="text-4xl opacity-40">🏠</span>
                   {listing.isNew && <span className="absolute top-3 left-3 bg-emerald-500 text-white text-xs font-medium px-2.5 py-1 rounded-full">New</span>}
@@ -135,16 +135,16 @@ export default function ListingsPage() {
                   </button>
                 </div>
                 <div className="p-5">
-                  <p className="text-xl font-semibold text-blue-600">${adjustedPrice(listing.price).toLocaleString()}<span className="text-sm font-normal text-gray-400">/mo</span></p>
-                  <h3 className="mt-1 text-base font-semibold text-gray-900 tracking-tight">{listing.title}</h3>
-                  <p className="mt-0.5 text-sm text-gray-400">{listing.address}</p>
-                  <div className="mt-3 flex items-center gap-3 text-sm text-gray-400">
+                  <p className="text-xl font-semibold" style={{ color: 'var(--rc-primary)' }}>${adjustedPrice(listing.price).toLocaleString()}<span className="text-sm font-normal" style={{ color: 'var(--rc-muted)' }}>/mo</span></p>
+                  <h3 className="mt-1 text-base font-semibold tracking-tight" style={{ color: 'var(--rc-text)' }}>{listing.title}</h3>
+                  <p className="mt-0.5 text-sm" style={{ color: 'var(--rc-muted)' }}>{listing.address}</p>
+                  <div className="mt-3 flex items-center gap-3 text-sm" style={{ color: 'var(--rc-muted)' }}>
                     <span className="flex items-center gap-1">🛏️ {listing.bedrooms === 0 ? 'Studio' : listing.bedrooms}</span>
-                    <span className="text-gray-200">·</span>
+                    <span style={{ color: 'var(--rc-separator)' }}>·</span>
                     <span className="flex items-center gap-1">🚿 {listing.bathrooms}</span>
-                    <span className="text-gray-200">·</span>
+                    <span style={{ color: 'var(--rc-separator)' }}>·</span>
                     <span>{listing.sqft} sqft</span>
-                    {listing.petFriendly && <><span className="text-gray-200">·</span><span>🐾</span></>}
+                    {listing.petFriendly && <><span style={{ color: 'var(--rc-separator)' }}>·</span><span>🐾</span></>}
                   </div>
                 </div>
               </div>
