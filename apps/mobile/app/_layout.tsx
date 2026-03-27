@@ -33,6 +33,10 @@ export default function RootLayout() {
           options={{ headerShown: false, animation: 'slide_from_right' }}
         />
         <Stack.Screen
+          name="notifications"
+          options={{ headerShown: false, animation: 'slide_from_right' }}
+        />
+        <Stack.Screen
           name="landlord/dashboard"
           options={{ headerShown: false, animation: 'slide_from_right' }}
         />
@@ -47,6 +51,10 @@ export default function RootLayout() {
             animation: 'slide_from_bottom',
             presentation: 'modal',
           }}
+        />
+        <Stack.Screen
+          name="chat/[id]"
+          options={{ headerShown: false, animation: 'slide_from_right' }}
         />
       </Stack>
     </SafeAreaProvider>

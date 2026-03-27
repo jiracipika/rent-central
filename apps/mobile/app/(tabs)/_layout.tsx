@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
-import { Platform } from 'react-native';
+import { Platform, View, Text } from 'react-native';
 import { TabIcon } from '@/components/TabIcon';
-import { colors } from '@/lib/theme';
+import { colors, radius } from '@/lib/theme';
 
 export default function TabsLayout() {
   return (
@@ -10,19 +10,22 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: colors.tabBar,
-          borderTopColor: 'rgba(0,0,0,0.06)',
-          borderTopWidth: 0.5,
-          height: Platform.OS === 'ios' ? 88 : 68,
-          paddingBottom: Platform.OS === 'ios' ? 28 : 8,
-          paddingTop: 10,
+          borderTopColor: colors.separator,
+          borderTopWidth: Platform.OS === 'ios' ? 0.5 : 0,
+          height: Platform.OS === 'ios' ? 84 : 64,
+          paddingBottom: Platform.OS === 'ios' ? 24 : 8,
+          paddingTop: 8,
+          paddingHorizontal: 4,
         },
         tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
+        tabBarInactiveTintColor: colors.tabBarInactive,
         tabBarLabelStyle: {
           fontSize: 10,
           fontWeight: '500',
           letterSpacing: 0.2,
+          marginTop: 2,
         },
+        tabBarAllowFontScaling: false,
       }}
     >
       <Tabs.Screen
@@ -57,7 +60,29 @@ export default function TabsLayout() {
         options={{
           title: 'Messages',
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="message" color={color} focused={focused} />
+            <View>
+              <TabIcon name="message" color={color} focused={focused} />
+              <View style={{
+                position: 'absolute',
+                top: -2,
+                right: -4,
+                width: 16,
+                height: 16,
+                borderRadius: 8,
+                backgroundColor: colors.error,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderWidth: 1.5,
+                borderColor: 'white',
+              }}>
+                <Text style={{
+                  color: '#fff',
+                  fontSize: 9,
+                  fontWeight: '700',
+                  lineHeight: 12,
+                }}>3</Text>
+              </View>
+            </View>
           ),
         }}
       />
