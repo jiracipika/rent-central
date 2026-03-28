@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Card, YouTubeEmbed } from '@rent-central/ui';
 import type { Property } from '@rent-central/core';
 import { formatCurrency } from '@rent-central/core';
 
@@ -60,165 +59,231 @@ const mockListings: Property[] = [
   },
 ];
 
+const cities = [
+  { name: 'Toronto',   icon: '🏙️', count: '2,400+' },
+  { name: 'Vancouver', icon: '🌉', count: '1,800+' },
+  { name: 'Montréal',  icon: '⛪', count: '1,500+' },
+  { name: 'Calgary',   icon: '🌾', count: '900+' },
+  { name: 'Ottawa',    icon: '🏛️', count: '750+' },
+  { name: 'Halifax',   icon: '⚓', count: '420+' },
+];
+
 const features = [
-  { icon: '🔍', title: 'Browse Listings', desc: 'Search thousands of verified rentals across Canada.' },
-  { icon: '📝', title: 'Apply Online', desc: 'Submit applications with a few clicks. No paperwork hassle.' },
-  { icon: '💳', title: 'Secure Payments', desc: 'Pay deposits and rent securely with Stripe integration.' },
-  { icon: '✍️', title: 'Digital Contracts', desc: 'Sign leases electronically. Fast, legal, paperless.' },
+  { icon: '🔍', color: '#007AFF', label: 'Search',   desc: 'Thousands of verified listings' },
+  { icon: '📝', color: '#34C759', label: 'Apply',    desc: 'One-tap rental applications' },
+  { icon: '💳', color: '#FF9500', label: 'Pay',      desc: 'Secure Stripe payments' },
+  { icon: '✍️', color: '#AF52DE', label: 'Sign',     desc: 'Digital lease contracts' },
 ];
 
 export default function Home() {
   return (
-    <>
-      {/* Hero */}
-      <section className="bg-white pt-32 pb-20">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-            Rent Central
+    <div className="ios-page">
+
+      {/* ── Hero ── */}
+      <section style={{ paddingTop: 56 }}>
+        <div className="px-4 pt-10 pb-6 max-w-[640px] mx-auto text-center">
+          <p className="ios-footnote mb-2 font-semibold tracking-widest uppercase" style={{ color: 'var(--ios-blue)', letterSpacing: '0.08em' }}>
+            Canada's #1 Rental App
+          </p>
+          <h1
+            className="ios-large-title mb-3"
+            style={{ fontSize: 'clamp(32px, 6vw, 48px)', lineHeight: 1.1 }}
+          >
+            Find Your Perfect Home
           </h1>
-          <p className="mt-4 text-lg sm:text-xl text-gray-500 max-w-xl mx-auto">
-            Find your perfect rental across Canada
+          <p className="ios-subhead mb-8" style={{ fontSize: '17px', color: 'var(--ios-label2)' }}>
+            Browse, apply, and sign — all in one place.
           </p>
-          <div className="mt-10 max-w-lg mx-auto">
-            <div className="flex bg-white rounded-2xl shadow-sm border border-gray-200 p-2">
-              <input
-                type="text"
-                placeholder="Enter postal code (e.g. M5H 1A1)"
-                className="flex-1 px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none bg-transparent"
-              />
-              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3 rounded-xl transition-all duration-300 ease-out">
-                Search
-              </button>
-            </div>
-          </div>
-          <p className="mt-4 text-sm text-gray-400">
-            Popular: <span className="text-gray-600 cursor-pointer hover:text-gray-900 transition-colors">Toronto</span> ·{' '}
-            <span className="text-gray-600 cursor-pointer hover:text-gray-900 transition-colors">Vancouver</span> ·{' '}
-            <span className="text-gray-600 cursor-pointer hover:text-gray-900 transition-colors">Montréal</span> ·{' '}
-            <span className="text-gray-600 cursor-pointer hover:text-gray-900 transition-colors">Calgary</span>
-          </p>
-        </div>
-      </section>
 
-      {/* Features */}
-      <section className="py-24" style={{ background: '#FAFAFA' }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-semibold text-center text-gray-900 tracking-tight mb-4">
-            Everything You Need to Rent
-          </h2>
-          <p className="text-center text-gray-400 mb-16">One platform for your entire rental journey</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((f) => (
-              <div key={f.title} className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 ease-out">
-                <span className="text-3xl">{f.icon}</span>
-                <h3 className="mt-4 text-base font-semibold text-gray-900 tracking-tight">{f.title}</h3>
-                <p className="mt-2 text-sm text-gray-400 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl font-semibold text-center text-gray-900 tracking-tight mb-4">How It Works</h2>
-          <p className="text-center text-gray-400 mb-12">Renting in Canada has never been easier</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-            <div className="bg-gray-50 rounded-2xl p-8">
-              <div className="text-3xl mb-3">1️⃣</div>
-              <h3 className="font-semibold text-gray-900">Browse</h3>
-              <p className="mt-1 text-sm text-gray-400">Search verified listings across Canada</p>
-            </div>
-            <div className="bg-gray-50 rounded-2xl p-8">
-              <div className="text-3xl mb-3">2️⃣</div>
-              <h3 className="font-semibold text-gray-900">Apply</h3>
-              <p className="mt-1 text-sm text-gray-400">Submit your application in minutes</p>
-            </div>
-            <div className="bg-gray-50 rounded-2xl p-8">
-              <div className="text-3xl mb-3">3️⃣</div>
-              <h3 className="font-semibold text-gray-900">Move In</h3>
-              <p className="mt-1 text-sm text-gray-400">Sign digitally and get your keys</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Listings */}
-      <section className="py-24" style={{ background: '#FAFAFA' }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-center justify-between mb-10">
-            <div>
-              <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">Featured Listings</h2>
-              <p className="mt-1 text-gray-400 text-sm">Handpicked properties across Canada</p>
-            </div>
-            <Link href="/listings" className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-all duration-300 ease-out">
-              View all →
+          {/* iOS-style search bar */}
+          <div
+            className="flex items-center gap-3 mx-auto"
+            style={{
+              background: 'var(--ios-grouped-bg2)',
+              borderRadius: 16,
+              padding: '6px 6px 6px 14px',
+              boxShadow: '0 1px 0 var(--ios-sep)',
+              maxWidth: 520,
+            }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--ios-label3)' }}>
+              <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Postal code, city, or neighbourhood"
+              className="flex-1 bg-transparent border-none outline-none"
+              style={{ fontSize: 15, color: 'var(--ios-label)', letterSpacing: '-0.016em', padding: '8px 0' }}
+            />
+            <Link
+              href="/listings"
+              className="ios-btn ios-btn-blue flex-shrink-0"
+              style={{ height: 40, borderRadius: 12, padding: '0 20px', fontSize: 15 }}
+            >
+              Search
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockListings.map((listing) => (
-              <Link key={listing.id} href={`/listings/${listing.id}`} className="group">
-                <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 ease-out overflow-hidden">
-                  {/* Image placeholder */}
-                  <div className="relative h-48 bg-gray-100 flex items-center justify-center">
-                    <span className="text-4xl opacity-40">🏠</span>
-                    {listing.isNew && (
-                      <span className="absolute top-3 left-3 bg-emerald-500 text-white text-xs font-medium px-3 py-1 rounded-full">
-                        New
-                      </span>
-                    )}
-                    <button className="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
-                      ♡
-                    </button>
-                  </div>
-                  {/* Details */}
-                  <div className="p-6">
-                    <p className="text-xl font-semibold text-blue-600">{formatCurrency(listing.pricePerTerm[12])}<span className="text-sm font-normal text-gray-400">/mo</span></p>
-                    <h3 className="mt-1 text-base font-semibold text-gray-900 tracking-tight">{listing.title}</h3>
-                    <p className="mt-1 text-sm text-gray-400">{listing.address}, {listing.city}</p>
-                    <div className="mt-3 flex items-center gap-3 text-sm text-gray-400">
-                      <span>{listing.bedrooms === 0 ? 'Studio' : `${listing.bedrooms} Bed`}</span>
-                      <span className="text-gray-200">·</span>
-                      <span>{listing.bathrooms} Bath</span>
-                      {listing.petFriendly && (
-                        <>
-                          <span className="text-gray-200">·</span>
-                          <span>🐾</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Link>
+
+          {/* Popular cities */}
+          <p className="ios-caption1 mt-4" style={{ color: 'var(--ios-label3)' }}>
+            Popular: &nbsp;
+            {['Toronto', 'Vancouver', 'Montréal', 'Calgary'].map((city, i) => (
+              <span key={city}>
+                <Link href="/listings" className="ios-btn-text" style={{ fontSize: 12 }}>{city}</Link>
+                {i < 3 && <span style={{ color: 'var(--ios-sep)' }}> · </span>}
+              </span>
             ))}
-          </div>
+          </p>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">Ready to Find Your Next Home?</h2>
-          <p className="mt-4 text-gray-400 text-lg">
-            Join thousands of Canadians who found their perfect rental on Rent Central.
-          </p>
-          <div className="mt-10 flex justify-center gap-4">
+      {/* ── Featured Listings Carousel ── */}
+      <section className="mb-6">
+        <div className="flex items-center justify-between px-4 pb-2">
+          <h2 className="ios-title3">Featured Listings</h2>
+          <Link href="/listings" className="ios-btn-text" style={{ fontSize: 15 }}>See All</Link>
+        </div>
+        <div className="ios-scroll-x" style={{ paddingBottom: 8 }}>
+          {mockListings.map((listing) => (
             <Link
-              href="/sign-up"
-              className="bg-blue-600 text-white font-medium px-8 py-3 rounded-full hover:bg-blue-700 transition-all duration-300 ease-out"
+              key={listing.id}
+              href={`/listings/${listing.id}`}
+              className="ios-listing-card"
+              style={{ width: 260 }}
             >
+              <div className="ios-listing-image" style={{ height: 172, aspectRatio: 'unset' }}>
+                <span className="text-4xl" style={{ opacity: 0.18 }}>🏠</span>
+                {listing.isNew && <span className="ios-listing-tag">New</span>}
+                <button className="ios-heart-btn" onClick={(e) => e.preventDefault()}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-4 h-4" style={{ color: '#8E8E93' }}>
+                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                  </svg>
+                </button>
+              </div>
+              <div className="px-3 py-3">
+                <p className="ios-listing-price">{formatCurrency(listing.pricePerTerm[12])}<span>/mo</span></p>
+                <p className="ios-headline mt-0.5 truncate" style={{ fontSize: 15 }}>{listing.title}</p>
+                <p className="ios-caption1 mt-0.5 truncate">{listing.address}, {listing.city}</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="ios-pill ios-pill-gray" style={{ fontSize: 11 }}>
+                    {listing.bedrooms === 0 ? 'Studio' : `${listing.bedrooms} bed`}
+                  </span>
+                  <span className="ios-pill ios-pill-gray" style={{ fontSize: 11 }}>
+                    {listing.bathrooms} bath
+                  </span>
+                  {listing.petFriendly && (
+                    <span className="ios-pill ios-pill-green" style={{ fontSize: 11 }}>🐾 Pets OK</span>
+                  )}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Browse by City ── */}
+      <section className="mb-6">
+        <p className="ios-section-header">Browse by City</p>
+        <div className="ios-group">
+          {cities.map((city, i) => (
+            <Link key={city.name} href="/listings" className="ios-row" style={{ minHeight: 52 }}>
+              <span className="text-xl">{city.icon}</span>
+              <span className="ios-row-label">{city.name}</span>
+              <span className="ios-row-value ios-footnote">{city.count} rentals</span>
+              <span className="ios-chevron">›</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ── How It Works ── */}
+      <section className="mb-6">
+        <p className="ios-section-header">How Rent Central Works</p>
+        <div className="ios-scroll-x gap-3">
+          {features.map((f, i) => (
+            <div
+              key={f.label}
+              style={{
+                width: 160,
+                background: 'var(--ios-grouped-bg2)',
+                borderRadius: 16,
+                padding: '20px 16px',
+                flexShrink: 0,
+              }}
+            >
+              <div
+                className="w-12 h-12 rounded-[14px] flex items-center justify-center text-2xl mb-3"
+                style={{ background: `${f.color}18` }}
+              >
+                {f.icon}
+              </div>
+              <p className="ios-headline" style={{ fontSize: 15 }}>{i + 1}. {f.label}</p>
+              <p className="ios-caption1 mt-1 leading-snug">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Landlord CTA ── */}
+      <section className="mb-6 px-4">
+        <div
+          className="rounded-[20px] overflow-hidden p-6"
+          style={{ background: 'var(--ios-blue)' }}
+        >
+          <p className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.65)' }}>
+            For Landlords
+          </p>
+          <h2 className="ios-title3 mb-1" style={{ color: '#fff', fontSize: 22 }}>List Your Property</h2>
+          <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 15, letterSpacing: '-0.016em', marginBottom: 20 }}>
+            Reach thousands of pre-verified renters across Canada.
+          </p>
+          <Link
+            href="/landlord/listings/new"
+            className="ios-btn"
+            style={{
+              background: 'rgba(255,255,255,0.20)',
+              color: '#fff',
+              height: 44,
+              borderRadius: 12,
+              fontSize: 15,
+              display: 'inline-flex',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            Post a Listing
+          </Link>
+        </div>
+      </section>
+
+      {/* ── Sign Up CTA ── */}
+      <section className="mb-8 px-4">
+        <div
+          style={{
+            background: 'var(--ios-grouped-bg2)',
+            borderRadius: 20,
+            padding: '24px 20px',
+            textAlign: 'center',
+          }}
+        >
+          <p className="ios-title3 mb-2" style={{ fontSize: 20 }}>Ready to Find Your Home?</p>
+          <p className="ios-subhead mb-6" style={{ color: 'var(--ios-label2)', fontSize: 15 }}>
+            Join 80,000+ Canadians who found their perfect rental.
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Link href="/sign-up" className="ios-btn ios-btn-blue" style={{ height: 44, borderRadius: 12, padding: '0 24px', fontSize: 15 }}>
               Get Started
             </Link>
             <Link
               href="/listings"
-              className="bg-white text-gray-900 font-medium px-8 py-3 rounded-full border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-300 ease-out"
+              className="ios-btn"
+              style={{ height: 44, borderRadius: 12, padding: '0 24px', fontSize: 15, background: 'var(--ios-fill3)', color: 'var(--ios-blue)' }}
             >
-              Browse Listings
+              Browse
             </Link>
           </div>
         </div>
       </section>
-    </>
+
+    </div>
   );
 }

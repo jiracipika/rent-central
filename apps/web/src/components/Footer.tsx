@@ -2,41 +2,67 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t mt-auto" style={{ borderColor: 'var(--rc-separator)' }}>
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+    <footer style={{ borderTop: '0.5px solid var(--ios-sep)', background: 'var(--ios-grouped-bg2)' }}>
+      <div className="max-w-[980px] mx-auto px-4 py-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h3 className="font-semibold text-sm tracking-tight" style={{ color: 'var(--rc-text)' }}>🏠 Rent Central</h3>
-            <p className="text-xs mt-1.5 leading-relaxed" style={{ color: 'var(--rc-muted)' }}>Canada&apos;s trusted rental marketplace. Find your perfect home.</p>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-6 h-6 rounded-[6px] flex items-center justify-center" style={{ background: 'var(--ios-blue)' }}>
+                <svg viewBox="0 0 20 20" fill="white" className="w-3.5 h-3.5">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h3a1 1 0 001-1v-2a1 1 0 011-1 1 1 0 011 1v2a1 1 0 001 1h3a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                </svg>
+              </div>
+              <span className="text-[13px] font-semibold" style={{ color: 'var(--ios-label)', letterSpacing: '-0.006em' }}>
+                Rent Central
+              </span>
+            </div>
+            <p className="text-[12px] leading-relaxed" style={{ color: 'var(--ios-label3)' }}>
+              Canada's trusted rental marketplace.
+            </p>
           </div>
+
           <div>
-            <h4 className="font-medium text-xs mb-3" style={{ color: 'var(--rc-text)' }}>Renters</h4>
+            <p className="text-[12px] font-semibold mb-3 uppercase tracking-wider" style={{ color: 'var(--ios-label3)' }}>Renters</p>
             <ul className="space-y-2">
-              <li><Link href="/listings" className="text-xs transition-colors duration-200 hover:text-gray-700" style={{ color: 'var(--rc-muted)' }}>Browse Listings</Link></li>
-              <li><Link href="/applications" className="text-xs transition-colors duration-200 hover:text-gray-700" style={{ color: 'var(--rc-muted)' }}>My Applications</Link></li>
-              <li><Link href="/bookmarks" className="text-xs transition-colors duration-200 hover:text-gray-700" style={{ color: 'var(--rc-muted)' }}>Saved Listings</Link></li>
-              <li><Link href="/contracts" className="text-xs transition-colors duration-200 hover:text-gray-700" style={{ color: 'var(--rc-muted)' }}>Contracts</Link></li>
+              {[['Browse Listings', '/listings'], ['My Applications', '/applications'], ['Saved', '/bookmarks'], ['Contracts', '/contracts']].map(([label, href]) => (
+                <li key={href}>
+                  <Link href={href} className="text-[13px] transition-opacity hover:opacity-70" style={{ color: 'var(--ios-blue)', letterSpacing: '-0.006em' }}>
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
+
           <div>
-            <h4 className="font-medium text-xs mb-3" style={{ color: 'var(--rc-text)' }}>Landlords</h4>
+            <p className="text-[12px] font-semibold mb-3 uppercase tracking-wider" style={{ color: 'var(--ios-label3)' }}>Landlords</p>
             <ul className="space-y-2">
-              <li><Link href="/landlord/listings/new" className="text-xs transition-colors duration-200 hover:text-gray-700" style={{ color: 'var(--rc-muted)' }}>Post a Listing</Link></li>
-              <li><Link href="/landlord" className="text-xs transition-colors duration-200 hover:text-gray-700" style={{ color: 'var(--rc-muted)' }}>Dashboard</Link></li>
-              <li><Link href="/landlord/applications" className="text-xs transition-colors duration-200 hover:text-gray-700" style={{ color: 'var(--rc-muted)' }}>Applicants</Link></li>
+              {[['Post a Listing', '/landlord/listings/new'], ['Dashboard', '/landlord'], ['Applicants', '/landlord/applications']].map(([label, href]) => (
+                <li key={href}>
+                  <Link href={href} className="text-[13px] transition-opacity hover:opacity-70" style={{ color: 'var(--ios-blue)', letterSpacing: '-0.006em' }}>
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
+
           <div>
-            <h4 className="font-medium text-xs mb-3" style={{ color: 'var(--rc-text)' }}>Company</h4>
+            <p className="text-[12px] font-semibold mb-3 uppercase tracking-wider" style={{ color: 'var(--ios-label3)' }}>Company</p>
             <ul className="space-y-2">
-              <li><span className="text-xs cursor-pointer transition-colors duration-200 hover:text-gray-700" style={{ color: 'var(--rc-muted)' }}>About</span></li>
-              <li><span className="text-xs cursor-pointer transition-colors duration-200 hover:text-gray-700" style={{ color: 'var(--rc-muted)' }}>Privacy</span></li>
-              <li><span className="text-xs cursor-pointer transition-colors duration-200 hover:text-gray-700" style={{ color: 'var(--rc-muted)' }}>Terms</span></li>
+              {['About', 'Privacy', 'Terms'].map((item) => (
+                <li key={item}>
+                  <span className="text-[13px] cursor-pointer transition-opacity hover:opacity-70" style={{ color: 'var(--ios-blue)', letterSpacing: '-0.006em' }}>{item}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
-        <div className="mt-10 pt-6 text-center" style={{ borderTop: '1px solid var(--rc-border)' }}>
-          <p className="text-[11px]" style={{ color: 'var(--rc-muted)' }}>© {new Date().getFullYear()} Rent Central. All rights reserved. 🍁 Made in Canada</p>
+
+        <div style={{ borderTop: '0.5px solid var(--ios-sep)', paddingTop: '16px' }}>
+          <p className="text-center text-[11px]" style={{ color: 'var(--ios-label3)' }}>
+            © {new Date().getFullYear()} Rent Central Inc. · Made in Canada 🍁
+          </p>
         </div>
       </div>
     </footer>

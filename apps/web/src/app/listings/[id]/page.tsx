@@ -23,120 +23,252 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
   const multiplier = term === '3' ? 1.15 : term === '6' ? 1.05 : 1;
   const adjustedPrice = Math.round(listing.price * multiplier);
 
-  const amenities: string[] = [
-    'Parking', 'Laundry', ...(listing.petFriendly ? ['Pet Friendly'] : []),
-    ...(listing.furnished ? ['Furnished'] : []),
+  const amenities = [
+    'Parking', 'In-Suite Laundry',
+    ...(listing.petFriendly ? ['Pet Friendly'] : []),
+    ...(listing.furnished ? ['Fully Furnished'] : []),
     ...(listing.utilities ? ['Utilities Included'] : []),
+    'High-speed Internet',
   ];
 
   const similar = mockListings.filter((l) => l.id !== listing.id).slice(0, 3);
 
+  const specs = [
+    { icon: '🛏', label: listing.bedrooms === 0 ? 'Studio' : `${listing.bedrooms} Bed`, sub: 'Bedrooms' },
+    { icon: '🚿', label: `${listing.bathrooms}`, sub: 'Bathrooms' },
+    { icon: '📐', label: `${listing.sqft.toLocaleString()}`, sub: 'Square Ft.' },
+    { icon: '🏠', label: listing.type.charAt(0).toUpperCase() + listing.type.slice(1), sub: 'Type' },
+  ];
+
   return (
-    <div className="max-w-6xl mx-auto px-6 py-20 pt-28">
-      <Link href="/listings" className="text-sm text-blue-600 hover:text-blue-700 transition-colors">← Back to listings</Link>
+    <div className="ios-page" style={{ paddingBottom: 100 }}>
+      <div style={{ paddingTop: 44 }}>
 
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="h-80 bg-gray-100 rounded-2xl flex items-center justify-center">
-            <span className="text-6xl opacity-30">🏠</span>
+        {/* Back button + action bar */}
+        <div
+          className="flex items-center justify-between px-2 py-1"
+          style={{ minHeight: 44 }}
+        >
+          <Link href="/listings" className="ios-btn-text flex items-center gap-1" style={{ minWidth: 44, minHeight: 44 }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Listings
+          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setSaved(!saved)}
+              className="w-9 h-9 flex items-center justify-center rounded-lg tap-scale"
+              style={{ color: saved ? 'var(--ios-red)' : 'var(--ios-blue)' }}
+            >
+              <svg viewBox="0 0 24 24" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={1.75} className="w-5 h-5">
+                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+              </svg>
+            </button>
+            <button className="w-9 h-9 flex items-center justify-center rounded-lg tap-scale" style={{ color: 'var(--ios-blue)' }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+            </button>
           </div>
-          <div>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">{listing.title}</h1>
-                <p className="text-gray-400 mt-1">{listing.address}</p>
-              </div>
-              {listing.isNew && <span className="bg-emerald-500 text-white text-xs font-medium px-3 py-1 rounded-full flex-shrink-0">New</span>}
-            </div>
-            <div className="flex items-center gap-2 mt-4">
-              {(['3', '6', '12'] as const).map((t) => (
-                <button key={t} onClick={() => setTerm(t)}
-                  className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${term === t ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                  {t} Months
-                </button>
-              ))}
-            </div>
-            <p className="mt-3 text-2xl font-semibold text-blue-600">${adjustedPrice.toLocaleString()}<span className="text-base font-normal text-gray-400">/mo</span></p>
-          </div>
+        </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { icon: '🛏️', label: 'Bedrooms', value: listing.bedrooms === 0 ? 'Studio' : listing.bedrooms },
-              { icon: '🚿', label: 'Bathrooms', value: listing.bathrooms },
-              { icon: '📐', label: 'Square Feet', value: `${listing.sqft}` },
-              { icon: '🏠', label: 'Type', value: listing.type.charAt(0).toUpperCase() + listing.type.slice(1) },
-            ].map((s) => (
-              <div key={s.label} className="bg-gray-50 rounded-xl p-4 text-center">
-                <span className="text-lg">{s.icon}</span>
-                <p className="text-lg font-semibold text-gray-900 mt-1">{s.value}</p>
-                <p className="text-xs text-gray-400">{s.label}</p>
-              </div>
+        {/* Hero image */}
+        <div
+          style={{
+            width: '100%',
+            height: 260,
+            background: 'var(--ios-fill4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+          }}
+        >
+          <span style={{ fontSize: 64, opacity: 0.12 }}>🏠</span>
+          {listing.isNew && (
+            <span className="ios-listing-tag" style={{ top: 16, left: 16 }}>New</span>
+          )}
+        </div>
+
+        {/* Price + title */}
+        <div className="px-4 pt-4 pb-2">
+          {/* Lease term picker */}
+          <div className="ios-segmented mb-3" style={{ display: 'inline-flex' }}>
+            {(['3', '6', '12'] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTerm(t)}
+                className={`ios-seg-item ${term === t ? 'ios-seg-item-active' : ''}`}
+                style={{ padding: '0 16px' }}
+              >
+                {t} months
+              </button>
             ))}
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">Description</h2>
-            <p className="text-gray-500 leading-relaxed">
-              Welcome to this beautiful {listing.type} located at {listing.address}. This property features {listing.bedrooms === 0 ? 'a studio layout' : `${listing.bedrooms} bedroom${listing.bedrooms > 1 ? 's' : ''}`} and {listing.bathrooms} bathroom{listing.bathrooms > 1 ? 's' : ''}, spanning {listing.sqft} square feet of living space.
-              {listing.petFriendly && ' Pet-friendly with responsible pet policy.'}
-              {listing.furnished && ' Comes fully furnished with modern decor.'}
-              {listing.utilities && ' All utilities are included in the monthly rent.'}
-              Available starting {listing.available}. Don&apos;t miss this opportunity!
-            </p>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">Amenities</h2>
-            <div className="flex flex-wrap gap-2">
-              {amenities.map((a) => (
-                <span key={a} className="bg-blue-50 text-blue-700 text-sm px-3 py-1.5 rounded-full">{a}</span>
-              ))}
-            </div>
+          <p className="ios-listing-price" style={{ fontSize: 28 }}>
+            ${adjustedPrice.toLocaleString()}
+            <span style={{ fontSize: 17 }}>/mo</span>
+          </p>
+          <h1 className="ios-title3 mt-1">{listing.title}</h1>
+          <div className="flex items-center gap-1 mt-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3.5 h-3.5" style={{ color: 'var(--ios-label3)' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <p className="ios-subhead" style={{ fontSize: 14 }}>{listing.address}</p>
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-20">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-xl">👤</div>
-              <div>
-                <p className="font-semibold text-gray-900">Sarah Chen</p>
-                <p className="text-sm text-gray-400">Joined 2024</p>
-              </div>
+        {/* Quick specs */}
+        <div className="ios-scroll-x py-2" style={{ gap: 8 }}>
+          {specs.map((s) => (
+            <div
+              key={s.sub}
+              style={{
+                background: 'var(--ios-grouped-bg2)',
+                borderRadius: 12,
+                padding: '12px 16px',
+                minWidth: 80,
+                textAlign: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <p style={{ fontSize: 20, marginBottom: 2 }}>{s.icon}</p>
+              <p className="ios-headline" style={{ fontSize: 16 }}>{s.label}</p>
+              <p className="ios-caption1">{s.sub}</p>
             </div>
-            <div className="flex items-center gap-1 text-sm text-gray-500 mb-6">
-              <span className="text-emerald-500">●</span> 95% response rate
+          ))}
+        </div>
+
+        {/* Description */}
+        <p className="ios-section-header mt-2">About This Property</p>
+        <div className="ios-group px-4 py-4" style={{ borderRadius: 16, marginBottom: 8, background: 'var(--ios-grouped-bg2)' }}>
+          <p className="ios-body" style={{ fontSize: 15, lineHeight: 1.55, color: 'var(--ios-label2)' }}>
+            Welcome to this beautiful {listing.type} located at {listing.address}. This property features{' '}
+            {listing.bedrooms === 0 ? 'a studio layout' : `${listing.bedrooms} bedroom${listing.bedrooms > 1 ? 's' : ''}`} and{' '}
+            {listing.bathrooms} bathroom{listing.bathrooms > 1 ? 's' : ''}, spanning {listing.sqft.toLocaleString()} square feet.
+            {listing.petFriendly && ' Pet-friendly with a responsible pet policy.'}
+            {listing.furnished && ' Comes fully furnished with modern décor.'}
+            {listing.utilities && ' All utilities included in the monthly rent.'}
+            {' '}Available from {listing.available}.
+          </p>
+        </div>
+
+        {/* Amenities */}
+        <p className="ios-section-header">Amenities</p>
+        <div className="ios-group">
+          {amenities.map((a, i) => (
+            <div key={a} className="ios-row" style={{ minHeight: 44 }}>
+              <span style={{ color: 'var(--ios-green)', fontSize: 14, fontWeight: 600 }}>✓</span>
+              <span className="ios-row-label" style={{ fontSize: 15 }}>{a}</span>
             </div>
-            <div className="flex gap-3">
-              <Link href={`/listings/${listing.id}/apply`} className="flex-1 bg-blue-600 text-white text-center font-medium px-4 py-2.5 rounded-full hover:bg-blue-700 transition-all">Apply Now</Link>
-              <button onClick={() => setSaved(!saved)}
-                className={`px-4 py-2.5 rounded-full border font-medium text-sm transition-all ${saved ? 'bg-red-50 border-red-200 text-red-600' : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}>
-                {saved ? '♥ Saved' : '♡ Save'}
-              </button>
-            </div>
+          ))}
+        </div>
+
+        {/* Availability */}
+        <p className="ios-section-header mt-2">Availability</p>
+        <div className="ios-group">
+          <div className="ios-row">
+            <span className="ios-row-label">Available From</span>
+            <span className="ios-row-value">{listing.available}</span>
+          </div>
+          <div className="ios-row">
+            <span className="ios-row-label">Minimum Term</span>
+            <span className="ios-row-value">12 months</span>
+          </div>
+          <div className="ios-row">
+            <span className="ios-row-label">Deposit</span>
+            <span className="ios-row-value">${(listing.price).toLocaleString()}</span>
           </div>
         </div>
-      </div>
 
-      {/* Similar listings */}
-      <div className="mt-16">
-        <h2 className="text-xl font-semibold text-gray-900 tracking-tight mb-6">Similar Listings</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Landlord */}
+        <p className="ios-section-header mt-2">Landlord</p>
+        <div className="ios-group">
+          <div className="ios-row" style={{ cursor: 'default' }}>
+            <div className="ios-avatar ios-avatar-blue w-10 h-10 text-base font-bold">S</div>
+            <div className="flex-1">
+              <p className="ios-row-label" style={{ fontSize: 15 }}>Sarah Chen</p>
+              <p className="ios-footnote">Member since 2024 · 95% response rate</p>
+            </div>
+            <span
+              className="ios-pill ios-pill-green"
+              style={{ fontSize: 11 }}
+            >
+              Active
+            </span>
+          </div>
+          <Link href={`/messages/1`} className="ios-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--ios-blue)' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <span className="ios-row-label" style={{ fontSize: 15 }}>Message Landlord</span>
+            <span className="ios-chevron">›</span>
+          </Link>
+        </div>
+
+        {/* Similar Listings */}
+        <p className="ios-section-header mt-2">Similar Listings</p>
+        <div className="ios-scroll-x" style={{ paddingBottom: 8 }}>
           {similar.map((s) => (
-            <Link key={s.id} href={`/listings/${s.id}`} className="group">
-              <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-                <div className="relative h-40 bg-gray-100 flex items-center justify-center">
-                  <span className="text-3xl opacity-40">🏠</span>
-                  {s.isNew && <span className="absolute top-3 left-3 bg-emerald-500 text-white text-xs font-medium px-2 py-0.5 rounded-full">New</span>}
-                </div>
-                <div className="p-4">
-                  <p className="font-semibold text-blue-600">${s.price.toLocaleString()}<span className="text-sm font-normal text-gray-400">/mo</span></p>
-                  <h3 className="mt-1 text-sm font-semibold text-gray-900">{s.title}</h3>
-                  <p className="text-xs text-gray-400 mt-0.5">{s.address}</p>
-                </div>
+            <Link
+              key={s.id}
+              href={`/listings/${s.id}`}
+              className="ios-listing-card"
+              style={{ width: 220 }}
+            >
+              <div
+                style={{
+                  height: 130,
+                  background: 'var(--ios-fill4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                }}
+              >
+                <span style={{ fontSize: 36, opacity: 0.15 }}>🏠</span>
+                {s.isNew && <span className="ios-listing-tag" style={{ fontSize: 10 }}>New</span>}
+              </div>
+              <div className="px-3 py-3">
+                <p className="ios-listing-price" style={{ fontSize: 17 }}>${s.price.toLocaleString()}<span>/mo</span></p>
+                <p className="ios-headline mt-0.5 truncate" style={{ fontSize: 14 }}>{s.title}</p>
+                <p className="ios-caption1 mt-0.5 truncate" style={{ fontSize: 11 }}>{s.address}</p>
               </div>
             </Link>
           ))}
+        </div>
+
+      </div>
+
+      {/* Sticky bottom action bar */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-50"
+        style={{
+          background: 'var(--ios-glass-bg)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          borderTop: '0.5px solid var(--ios-sep)',
+          padding: '12px 16px',
+          paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
+        }}
+      >
+        <div className="flex items-center gap-3 max-w-[640px] mx-auto">
+          <div className="flex-1">
+            <p className="ios-caption2">Monthly rent</p>
+            <p className="ios-listing-price" style={{ fontSize: 22 }}>
+              ${adjustedPrice.toLocaleString()}<span style={{ fontSize: 14 }}>/mo</span>
+            </p>
+          </div>
+          <Link
+            href={`/listings/${listing.id}/apply`}
+            className="ios-btn ios-btn-blue"
+            style={{ height: 50, borderRadius: 14, padding: '0 32px', fontSize: 17 }}
+          >
+            Apply Now
+          </Link>
         </div>
       </div>
     </div>
