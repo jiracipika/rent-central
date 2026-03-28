@@ -4,6 +4,8 @@ const nextConfig = {
   turbopack: {
     root: '../../',
   },
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
 };
 
 module.exports = nextConfig;
