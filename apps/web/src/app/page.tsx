@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import type { Property } from '@rent-central/core';
 import { formatCurrency } from '@rent-central/core';
