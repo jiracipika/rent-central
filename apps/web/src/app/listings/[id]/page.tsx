@@ -78,14 +78,22 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
           style={{
             width: '100%',
             height: 260,
-            background: 'var(--ios-fill4)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          <span style={{ fontSize: 64, opacity: 0.12 }}>🏠</span>
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: `linear-gradient(135deg, hsl(${(parseInt(id) * 47) % 360}, 45%, 82%) 0%, hsl(${((parseInt(id) * 47) + 50) % 360}, 50%, 75%) 100%)`,
+          }} />
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.08) 100%)',
+          }} />
+          <span style={{ fontSize: 80, opacity: 0.18, position: 'relative' }}>🏠</span>
           {listing.isNew && (
             <span className="ios-listing-tag" style={{ top: 16, left: 16 }}>New</span>
           )}
@@ -222,14 +230,18 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
               <div
                 style={{
                   height: 130,
-                  background: 'var(--ios-fill4)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   position: 'relative',
+                  overflow: 'hidden',
                 }}
               >
-                <span style={{ fontSize: 36, opacity: 0.15 }}>🏠</span>
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: `linear-gradient(135deg, hsl(${(parseInt(s.id) * 47) % 360}, 45%, 82%) 0%, hsl(${((parseInt(s.id) * 47) + 50) % 360}, 50%, 75%) 100%)`,
+                }} />
+                <span style={{ fontSize: 36, opacity: 0.18, position: 'relative' }}>🏠</span>
                 {s.isNew && <span className="ios-listing-tag" style={{ fontSize: 10 }}>New</span>}
               </div>
               <div className="px-3 py-3">

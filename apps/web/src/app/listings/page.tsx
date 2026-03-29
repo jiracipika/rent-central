@@ -147,8 +147,16 @@ export default function ListingsPage() {
           <div className="px-4 space-y-3 pb-6">
             {filtered.map((listing) => (
               <Link key={listing.id} href={`/listings/${listing.id}`} className="ios-listing-card block">
-                <div className="ios-listing-image" style={{ height: 200, aspectRatio: 'unset' }}>
-                  <span className="text-5xl" style={{ opacity: 0.15 }}>🏠</span>
+                <div className="ios-listing-image" style={{ height: 200, aspectRatio: 'unset', overflow: 'hidden' }}>
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: `linear-gradient(135deg, hsl(${(parseInt(listing.id) * 47) % 360}, 45%, 82%) 0%, hsl(${((parseInt(listing.id) * 47) + 50) % 360}, 50%, 75%) 100%)`,
+                  }} />
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.06) 100%)',
+                  }} />
+                  <span className="text-5xl" style={{ opacity: 0.18, position: 'relative' }}>🏠</span>
                   {listing.isNew && <span className="ios-listing-tag">New</span>}
                   <button
                     onClick={(e) => { e.preventDefault(); toggleHeart(listing.id); }}
