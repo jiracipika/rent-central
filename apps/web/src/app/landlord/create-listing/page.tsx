@@ -41,30 +41,12 @@ const CANADIAN_PROVINCES = [
 ];
 
 interface FormState {
-  // Details
-  title: string;
-  description: string;
-  type: PropertyType;
-  bedrooms: string;
-  bathrooms: string;
-  sqft: string;
-  // Location
-  address: string;
-  city: string;
-  province: string;
-  postalCode: string;
-  // Pricing
-  price12: string;
-  price6: string;
-  price3: string;
-  deposit: string;
-  availableFrom: string;
-  minTerm: '3' | '6' | '12';
-  // Features
-  utilities: boolean;
-  parking: boolean;
-  petFriendly: boolean;
-  furnished: boolean;
+  title: string; description: string; type: PropertyType;
+  bedrooms: string; bathrooms: string; sqft: string;
+  address: string; city: string; province: string; postalCode: string;
+  price12: string; price6: string; price3: string; deposit: string;
+  availableFrom: string; minTerm: '3' | '6' | '12';
+  utilities: boolean; parking: boolean; petFriendly: boolean; furnished: boolean;
   amenities: Set<string>;
 }
 
@@ -100,414 +82,437 @@ export default function CreateListingPage() {
 
   if (submitted) {
     return (
-      <div className="max-w-xl mx-auto px-6 py-20 pt-28 text-center">
-        <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
-          <span className="text-4xl">✅</span>
-        </div>
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Listing Published!</h1>
-        <p className="mt-3 text-gray-500">Your property is now live and visible to renters across Canada.</p>
-        <div className="mt-8 flex justify-center gap-3">
-          <Link href="/landlord/listings" className="rc-btn-primary">View My Listings</Link>
-          <Link href="/landlord" className="rc-btn-ghost border border-gray-200">Dashboard</Link>
+      <div className="ios-page min-h-screen flex items-center justify-center px-4">
+        <div className="text-center" style={{ maxWidth: 360 }}>
+          <div
+            style={{
+              width: 72, height: 72, borderRadius: 20,
+              background: 'rgba(52,199,89,0.10)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 20px', fontSize: 36,
+            }}
+          >
+            ✅
+          </div>
+          <h1 className="ios-title1" style={{ fontSize: 26 }}>Listing Published!</h1>
+          <p className="ios-subhead mt-2" style={{ color: 'var(--ios-label2)' }}>
+            Your property is now live and visible to renters across Canada.
+          </p>
+          <div className="flex gap-3 justify-center mt-8">
+            <Link
+              href="/landlord/listings"
+              style={{
+                height: 46, borderRadius: 13, padding: '0 28px',
+                background: 'linear-gradient(135deg, #007AFF 0%, #0055D4 100%)',
+                color: '#fff', fontSize: 15, fontWeight: 600,
+                display: 'inline-flex', alignItems: 'center', textDecoration: 'none',
+                boxShadow: '0 4px 14px rgba(0,122,255,0.35)',
+              }}
+            >
+              View My Listings
+            </Link>
+            <Link
+              href="/landlord"
+              style={{
+                height: 46, borderRadius: 13, padding: '0 28px',
+                background: 'var(--ios-fill3)', color: 'var(--ios-blue)',
+                fontSize: 15, fontWeight: 600, border: 'none',
+                display: 'inline-flex', alignItems: 'center', textDecoration: 'none',
+              }}
+            >
+              Dashboard
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-20 pt-28">
-      {/* Header */}
-      <div className="mb-8">
-        <Link href="/landlord" className="text-sm text-blue-600 hover:text-blue-700 transition-colors">
-          ← Back to Dashboard
-        </Link>
-        <h1 className="mt-4 text-2xl font-bold text-gray-900 tracking-tight">Post a Listing</h1>
-        <p className="mt-1 text-sm text-gray-400">Fill in the details to list your property on Rent Central</p>
-      </div>
-
-      {/* Step progress */}
-      <div className="rc-card-static p-4 mb-8">
-        <div className="flex items-center justify-between">
-          {STEPS.map((s, i) => (
-            <div key={s.id} className="flex items-center flex-1">
-              <button
-                onClick={() => i < step && setStep(i)}
-                className={`flex flex-col items-center gap-1.5 flex-1 transition-all ${i < step ? 'cursor-pointer' : 'cursor-default'}`}
-              >
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-base transition-all ${
-                  i === step ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
-                  : i < step ? 'bg-emerald-500 text-white'
-                  : 'bg-gray-100 text-gray-400'
-                }`}>
-                  {i < step ? '✓' : s.icon}
-                </div>
-                <span className={`text-[11px] font-medium hidden sm:block ${
-                  i === step ? 'text-blue-600' : i < step ? 'text-emerald-600' : 'text-gray-400'
-                }`}>{s.label}</span>
-              </button>
-              {i < STEPS.length - 1 && (
-                <div className={`h-0.5 flex-1 mx-1 transition-all ${i < step ? 'bg-emerald-400' : 'bg-gray-200'}`} />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Step content */}
-      <div className="rc-card-static p-6 mb-6">
-        <div className="flex items-center gap-3 mb-6 pb-5 border-b" style={{ borderColor: 'var(--rc-border)' }}>
-          <span className="text-2xl">{STEPS[step].icon}</span>
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">{STEPS[step].label}</h2>
-            <p className="text-sm text-gray-400">{STEPS[step].description}</p>
-          </div>
+    <div className="ios-page" style={{ paddingBottom: 100 }}>
+      <div style={{ paddingTop: 60 }}>
+        {/* Back nav */}
+        <div className="flex items-center gap-2 px-4 pt-3 pb-1">
+          <Link href="/landlord" className="ios-btn-text flex items-center gap-1" style={{ minHeight: 44 }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Dashboard
+          </Link>
         </div>
 
-        {/* Step 0: Details */}
-        {step === 0 && (
-          <div className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Title *</label>
-              <input
-                className="rc-input"
-                placeholder="e.g. Bright 2BR Downtown Toronto — Modern Finishes"
-                value={form.title}
-                onChange={(e) => set('title', e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
-              <textarea
-                className="rc-input min-h-[120px] resize-none"
-                placeholder="Describe your property, neighbourhood highlights, nearby transit, etc."
-                value={form.description}
-                onChange={(e) => set('description', e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Property Type *</label>
-              <div className="grid grid-cols-3 gap-2">
-                {PROPERTY_TYPES.map((t) => (
-                  <button
-                    key={t.value}
-                    type="button"
-                    onClick={() => set('type', t.value)}
-                    className={`flex items-center gap-2 px-3 py-2.5 rounded-[var(--radius-md)] border text-sm font-medium transition-all ${
-                      form.type === t.value
-                        ? 'bg-blue-50 border-blue-400 text-blue-700'
-                        : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
+        {/* Header */}
+        <div className="px-4 pb-4">
+          <h1 className="ios-large-title" style={{ fontSize: 28 }}>Post a Listing</h1>
+          <p className="ios-subhead mt-1" style={{ color: 'var(--ios-label2)' }}>
+            {STEPS[step].description}
+          </p>
+        </div>
+
+        {/* Step progress */}
+        <div className="px-4 mb-6">
+          <div className="flex items-center justify-between">
+            {STEPS.map((s, i) => (
+              <div key={s.id} className="flex items-center flex-1">
+                <button
+                  onClick={() => i < step && setStep(i)}
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flex: 1,
+                    cursor: i < step ? 'pointer' : 'default', background: 'none', border: 'none',
+                  }}
+                >
+                  <div style={{
+                    width: 36, height: 36, borderRadius: '50%',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14,
+                    background: i === step ? 'var(--ios-blue)' : i < step ? 'var(--ios-green)' : 'var(--ios-fill3)',
+                    color: i === step || i < step ? '#fff' : 'var(--ios-label3)',
+                    boxShadow: i === step ? '0 4px 12px rgba(0,122,255,0.3)' : 'none',
+                    transition: 'all 0.3s ease',
+                  }}>
+                    {i < step ? '✓' : s.icon}
+                  </div>
+                  <span
+                    style={{
+                      fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em',
+                      color: i === step ? 'var(--ios-blue)' : i < step ? 'var(--ios-green)' : 'var(--ios-label3)',
+                    }}
                   >
-                    <span>{t.icon}</span> {t.label}
-                  </button>
-                ))}
+                    {s.label}
+                  </span>
+                </button>
+                {i < STEPS.length - 1 && (
+                  <div style={{
+                    height: 2, flex: 1, margin: '0 4px', borderRadius: 1,
+                    background: i < step ? 'var(--ios-green)' : 'var(--ios-fill3)',
+                    transition: 'background 0.3s ease', marginBottom: 18,
+                  }} />
+                )}
               </div>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Bedrooms *</label>
-                <select
-                  className="rc-input"
-                  value={form.bedrooms}
-                  onChange={(e) => set('bedrooms', e.target.value)}
-                >
-                  <option value="">Select</option>
-                  {['0 (Studio)', '1', '2', '3', '4', '5+'].map((b, i) => (
-                    <option key={b} value={String(i)}>{b}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Bathrooms *</label>
-                <select
-                  className="rc-input"
-                  value={form.bathrooms}
-                  onChange={(e) => set('bathrooms', e.target.value)}
-                >
-                  <option value="">Select</option>
-                  {['1', '1.5', '2', '2.5', '3', '3+'].map((b) => (
-                    <option key={b} value={b}>{b}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Square Feet</label>
-                <input
-                  className="rc-input"
-                  type="number"
-                  placeholder="e.g. 850"
-                  value={form.sqft}
-                  onChange={(e) => set('sqft', e.target.value)}
-                />
-              </div>
-            </div>
+            ))}
           </div>
-        )}
+        </div>
 
-        {/* Step 1: Photos */}
-        {step === 1 && (
-          <div className="space-y-5">
-            <div className="border-2 border-dashed border-gray-200 rounded-[var(--radius-lg)] p-12 text-center hover:border-blue-400 hover:bg-blue-50/30 transition-all cursor-pointer">
-              <span className="text-4xl block mb-3">📸</span>
-              <p className="text-sm font-medium text-gray-700">Drop photos here, or click to browse</p>
-              <p className="text-xs text-gray-400 mt-1">Up to 20 photos · JPG, PNG · Max 10MB each</p>
-              <button className="mt-4 rc-btn-secondary text-xs px-4 py-2">Choose Photos</button>
-            </div>
-            <p className="text-xs text-gray-400 text-center">
-              💡 Listings with 6+ photos get 3× more enquiries. Include the living room, kitchen, bedrooms, bathroom, and exterior.
-            </p>
-            <div className="grid grid-cols-4 gap-3">
-              {['Living Room', 'Kitchen', 'Bedroom', 'Bathroom'].map((room) => (
-                <div key={room} className="aspect-square bg-gray-100 rounded-[var(--radius-md)] flex flex-col items-center justify-center gap-1 text-gray-400">
-                  <span className="text-xl">+</span>
-                  <span className="text-[10px]">{room}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Step 2: Location */}
-        {step === 2 && (
-          <div className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Street Address *</label>
-              <input
-                className="rc-input"
-                placeholder="123 Main St"
-                value={form.address}
-                onChange={(e) => set('address', e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">City *</label>
-                <input
-                  className="rc-input"
-                  placeholder="Toronto"
-                  value={form.city}
-                  onChange={(e) => set('city', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Province *</label>
-                <select
-                  className="rc-input"
-                  value={form.province}
-                  onChange={(e) => set('province', e.target.value)}
-                >
-                  {CANADIAN_PROVINCES.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Postal Code *</label>
-              <input
-                className="rc-input max-w-[160px]"
-                placeholder="M5V 2T6"
-                value={form.postalCode}
-                onChange={(e) => set('postalCode', e.target.value.toUpperCase())}
-                maxLength={7}
-              />
-            </div>
-            <div className="h-48 bg-gray-100 rounded-[var(--radius-lg)] flex items-center justify-center">
-              <div className="text-center">
-                <span className="text-3xl block mb-2">🗺️</span>
-                <p className="text-sm text-gray-400">Map preview after address entry</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Pricing */}
-        {step === 3 && (
-          <div className="space-y-5">
-            <div className="bg-blue-50 rounded-[var(--radius-md)] p-4 text-sm text-blue-700">
-              💡 Offering multiple lease terms attracts more applicants. Shorter terms typically command a 5–15% premium.
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Monthly Rent — 12-Month Lease *</label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
-                <input
-                  className="rc-input pl-7"
-                  type="number"
-                  placeholder="2,200"
-                  value={form.price12}
-                  onChange={(e) => set('price12', e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">6-Month Rent <span className="text-gray-400 font-normal">(optional)</span></label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
-                  <input
-                    className="rc-input pl-7"
-                    type="number"
-                    placeholder={form.price12 ? String(Math.round(Number(form.price12) * 1.05)) : ''}
-                    value={form.price6}
-                    onChange={(e) => set('price6', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">3-Month Rent <span className="text-gray-400 font-normal">(optional)</span></label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
-                  <input
-                    className="rc-input pl-7"
-                    type="number"
-                    placeholder={form.price12 ? String(Math.round(Number(form.price12) * 1.15)) : ''}
-                    value={form.price3}
-                    onChange={(e) => set('price3', e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Security Deposit *</label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
-                <input
-                  className="rc-input pl-7"
-                  type="number"
-                  placeholder={form.price12 || '2,200'}
-                  value={form.deposit}
-                  onChange={(e) => set('deposit', e.target.value)}
-                />
-              </div>
-              <p className="text-xs text-gray-400 mt-1.5">Most provinces cap deposit at one month's rent</p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Available From *</label>
-                <input
-                  className="rc-input"
-                  type="date"
-                  value={form.availableFrom}
-                  onChange={(e) => set('availableFrom', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Minimum Lease</label>
-                <select
-                  className="rc-input"
-                  value={form.minTerm}
-                  onChange={(e) => set('minTerm', e.target.value as '3' | '6' | '12')}
-                >
-                  <option value="3">3 Months</option>
-                  <option value="6">6 Months</option>
-                  <option value="12">12 Months</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Step 4: Amenities */}
-        {step === 4 && (
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">Included in Rent</h3>
-              <div className="space-y-2">
-                {[
-                  { key: 'utilities', label: 'Utilities Included', icon: '💡', desc: 'Heat, water, electricity' },
-                  { key: 'parking', label: 'Parking Included', icon: '🅿️', desc: 'Dedicated spot or garage' },
-                  { key: 'petFriendly', label: 'Pet Friendly', icon: '🐾', desc: 'Cats or dogs welcome' },
-                  { key: 'furnished', label: 'Furnished', icon: '🛋️', desc: 'Move-in ready with furniture' },
-                ].map((f) => (
-                  <button
-                    key={f.key}
-                    type="button"
-                    onClick={() => set(f.key as keyof FormState, !form[f.key as keyof FormState])}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-[var(--radius-md)] border text-left transition-all ${
-                      form[f.key as keyof FormState]
-                        ? 'bg-blue-50 border-blue-300'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
-                  >
-                    <span className="text-xl">{f.icon}</span>
-                    <div className="flex-1">
-                      <p className={`text-sm font-medium ${form[f.key as keyof FormState] ? 'text-blue-700' : 'text-gray-700'}`}>{f.label}</p>
-                      <p className="text-xs text-gray-400">{f.desc}</p>
-                    </div>
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                      form[f.key as keyof FormState] ? 'bg-blue-600 border-blue-600' : 'border-gray-300'
-                    }`}>
-                      {form[f.key as keyof FormState] && <span className="text-white text-[10px]">✓</span>}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">Building Amenities</h3>
-              <div className="grid grid-cols-3 gap-2">
-                {AMENITIES.map((a) => (
-                  <button
-                    key={a.key}
-                    type="button"
-                    onClick={() => toggleAmenity(a.key)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] border text-sm transition-all ${
-                      form.amenities.has(a.key)
-                        ? 'bg-blue-50 border-blue-400 text-blue-700'
-                        : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
-                  >
-                    <span>{a.icon}</span> {a.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Navigation */}
-      <div className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => step > 0 && setStep(step - 1)}
-          disabled={step === 0}
-          className="rc-btn-ghost border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
+        {/* Content card */}
+        <div
+          className="mx-4 mb-6"
+          style={{
+            background: 'var(--ios-grouped-bg2)',
+            borderRadius: 16,
+            border: '0.5px solid var(--ios-sep)',
+            overflow: 'hidden',
+          }}
         >
-          ← Back
-        </button>
+          <div style={{ padding: 20 }}>
+            <div className="flex items-center gap-3 mb-5 pb-4" style={{ borderBottom: '0.5px solid var(--ios-sep)' }}>
+              <span style={{ fontSize: 24 }}>{STEPS[step].icon}</span>
+              <div>
+                <h2 className="ios-title3" style={{ fontSize: 18 }}>{STEPS[step].label}</h2>
+                <p className="ios-caption1" style={{ color: 'var(--ios-label2)' }}>{STEPS[step].description}</p>
+              </div>
+            </div>
 
-        <div className="flex items-center gap-2">
-          {STEPS.map((_, i) => (
-            <div
-              key={i}
-              className={`w-1.5 h-1.5 rounded-full transition-all ${
-                i === step ? 'bg-blue-600 w-4' : i < step ? 'bg-emerald-400' : 'bg-gray-300'
-              }`}
-            />
-          ))}
+            {/* Step 0: Details */}
+            {step === 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Title *</label>
+                  <input className="ios-input" placeholder="e.g. Bright 2BR Downtown Toronto — Modern Finishes" value={form.title} onChange={(e) => set('title', e.target.value)} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Description</label>
+                  <textarea className="ios-input" style={{ minHeight: 100, resize: 'none', lineHeight: 1.5 }} placeholder="Describe your property, neighbourhood highlights, nearby transit..." value={form.description} onChange={(e) => set('description', e.target.value)} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 8, display: 'block' }}>Property Type *</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                    {PROPERTY_TYPES.map((t) => (
+                      <button key={t.value} type="button" onClick={() => set('type', t.value)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 6, padding: '10px 12px',
+                          borderRadius: 12, fontSize: 13, fontWeight: form.type === t.value ? 600 : 500,
+                          background: form.type === t.value ? 'rgba(0,122,255,0.10)' : 'var(--ios-fill3)',
+                          color: form.type === t.value ? 'var(--ios-blue)' : 'var(--ios-label2)',
+                          border: form.type === t.value ? '1px solid rgba(0,122,255,0.25)' : '1px solid transparent',
+                          transition: 'all 0.2s ease', cursor: 'pointer',
+                        }}
+                      >
+                        <span>{t.icon}</span> {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                  <div>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Bedrooms *</label>
+                    <select className="ios-input" value={form.bedrooms} onChange={(e) => set('bedrooms', e.target.value)}>
+                      <option value="">Select</option>
+                      {['0 (Studio)', '1', '2', '3', '4', '5+'].map((b, i) => <option key={b} value={String(i)}>{b}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Bathrooms *</label>
+                    <select className="ios-input" value={form.bathrooms} onChange={(e) => set('bathrooms', e.target.value)}>
+                      <option value="">Select</option>
+                      {['1', '1.5', '2', '2.5', '3', '3+'].map((b) => <option key={b} value={b}>{b}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Sq Ft</label>
+                    <input className="ios-input" type="number" placeholder="850" value={form.sqft} onChange={(e) => set('sqft', e.target.value)} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 1: Photos */}
+            {step === 1 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div
+                  style={{
+                    border: '2px dashed var(--ios-sep)', borderRadius: 16,
+                    padding: '40px 20px', textAlign: 'center', cursor: 'pointer',
+                    transition: 'border-color 0.2s ease',
+                  }}
+                >
+                  <span style={{ fontSize: 36, display: 'block', marginBottom: 8 }}>📸</span>
+                  <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--ios-label)' }}>Drop photos here, or click to browse</p>
+                  <p style={{ fontSize: 13, color: 'var(--ios-label3)', marginTop: 4 }}>Up to 20 photos · JPG, PNG · Max 10MB each</p>
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--ios-label3)', textAlign: 'center' }}>
+                  💡 Listings with 6+ photos get 3× more enquiries.
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+                  {['Living Room', 'Kitchen', 'Bedroom', 'Bathroom'].map((room) => (
+                    <div key={room}
+                      style={{
+                        aspectRatio: '1', borderRadius: 12, background: 'var(--ios-fill3)',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4,
+                        color: 'var(--ios-label3)',
+                      }}
+                    >
+                      <span style={{ fontSize: 20 }}>+</span>
+                      <span style={{ fontSize: 9, fontWeight: 500 }}>{room}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Step 2: Location */}
+            {step === 2 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Street Address *</label>
+                  <input className="ios-input" placeholder="123 Main St" value={form.address} onChange={(e) => set('address', e.target.value)} />
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>City *</label>
+                    <input className="ios-input" placeholder="Toronto" value={form.city} onChange={(e) => set('city', e.target.value)} />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Province</label>
+                    <select className="ios-input" value={form.province} onChange={(e) => set('province', e.target.value)}>
+                      {CANADIAN_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Postal Code *</label>
+                  <input className="ios-input" style={{ maxWidth: 160 }} placeholder="M5V 2T6" value={form.postalCode} onChange={(e) => set('postalCode', e.target.value.toUpperCase())} maxLength={7} />
+                </div>
+                <div style={{ height: 160, borderRadius: 16, background: 'var(--ios-fill3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: 28, opacity: 0.4 }}>🗺️</span>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: Pricing */}
+            {step === 3 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div style={{ padding: '12px 16px', borderRadius: 14, background: 'rgba(0,122,255,0.06)', border: '0.5px solid rgba(0,122,255,0.15)', fontSize: 14, color: 'var(--ios-blue)' }}>
+                  💡 Offering multiple lease terms attracts more applicants. Shorter terms typically command a 5–15% premium.
+                </div>
+                <div>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Monthly Rent — 12-Month Lease *</label>
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'var(--ios-label3)' }}>$</span>
+                    <input className="ios-input" style={{ paddingLeft: 28 }} type="number" placeholder="2,200" value={form.price12} onChange={(e) => set('price12', e.target.value)} />
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>6-Mo Rent (optional)</label>
+                    <div style={{ position: 'relative' }}>
+                      <span style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'var(--ios-label3)' }}>$</span>
+                      <input className="ios-input" style={{ paddingLeft: 28 }} type="number" placeholder={form.price12 ? String(Math.round(Number(form.price12) * 1.05)) : ''} value={form.price6} onChange={(e) => set('price6', e.target.value)} />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>3-Mo Rent (optional)</label>
+                    <div style={{ position: 'relative' }}>
+                      <span style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'var(--ios-label3)' }}>$</span>
+                      <input className="ios-input" style={{ paddingLeft: 28 }} type="number" placeholder={form.price12 ? String(Math.round(Number(form.price12) * 1.15)) : ''} value={form.price3} onChange={(e) => set('price3', e.target.value)} />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Security Deposit *</label>
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'var(--ios-label3)' }}>$</span>
+                    <input className="ios-input" style={{ paddingLeft: 28 }} type="number" placeholder={form.price12 || '2,200'} value={form.deposit} onChange={(e) => set('deposit', e.target.value)} />
+                  </div>
+                  <p style={{ fontSize: 12, color: 'var(--ios-label3)', marginTop: 4 }}>Most provinces cap at one month's rent</p>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Available From *</label>
+                    <input className="ios-input" type="date" value={form.availableFrom} onChange={(e) => set('availableFrom', e.target.value)} />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 6, display: 'block' }}>Minimum Lease</label>
+                    <select className="ios-input" value={form.minTerm} onChange={(e) => set('minTerm', e.target.value as '3' | '6' | '12')}>
+                      <option value="3">3 Months</option>
+                      <option value="6">6 Months</option>
+                      <option value="12">12 Months</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Amenities */}
+            {step === 4 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                <div>
+                  <h3 style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Included in Rent</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {([
+                      { key: 'utilities' as const, label: 'Utilities Included', icon: '💡', desc: 'Heat, water, electricity' },
+                      { key: 'parking' as const, label: 'Parking Included', icon: '🅿️', desc: 'Dedicated spot or garage' },
+                      { key: 'petFriendly' as const, label: 'Pet Friendly', icon: '🐾', desc: 'Cats or dogs welcome' },
+                      { key: 'furnished' as const, label: 'Furnished', icon: '🛋️', desc: 'Move-in ready with furniture' },
+                    ]).map((f) => (
+                      <button
+                        key={f.key}
+                        type="button"
+                        onClick={() => set(f.key, !form[f.key])}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 12,
+                          padding: '12px 14px', borderRadius: 14, width: '100%', textAlign: 'left',
+                          background: form[f.key] ? 'rgba(0,122,255,0.06)' : 'var(--ios-fill3)',
+                          border: form[f.key] ? '1px solid rgba(0,122,255,0.20)' : '1px solid transparent',
+                          transition: 'all 0.2s ease', cursor: 'pointer',
+                        }}
+                      >
+                        <span style={{ fontSize: 20 }}>{f.icon}</span>
+                        <div style={{ flex: 1 }}>
+                          <p style={{ fontSize: 15, fontWeight: 500, color: form[f.key] ? 'var(--ios-blue)' : 'var(--ios-label)' }}>{f.label}</p>
+                          <p style={{ fontSize: 12, color: 'var(--ios-label3)', marginTop: 1 }}>{f.desc}</p>
+                        </div>
+                        {/* iOS toggle */}
+                        <div style={{
+                          width: 51, height: 31, borderRadius: 16,
+                          background: form[f.key] ? 'var(--ios-green)' : 'rgba(120,120,128,0.32)',
+                          position: 'relative', transition: 'background 0.2s ease', flexShrink: 0,
+                        }}>
+                          <div style={{
+                            width: 27, height: 27, borderRadius: 14, background: '#fff',
+                            boxShadow: '0 3px 8px rgba(0,0,0,0.3)', position: 'absolute', top: 2,
+                            left: form[f.key] ? 22 : 2,
+                            transition: 'left 0.22s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                          }} />
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-label2)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Building Amenities</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                    {AMENITIES.map((a) => (
+                      <button
+                        key={a.key}
+                        type="button"
+                        onClick={() => toggleAmenity(a.key)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 6, padding: '8px 10px',
+                          borderRadius: 12, fontSize: 13, fontWeight: 500,
+                          background: form.amenities.has(a.key) ? 'rgba(0,122,255,0.10)' : 'var(--ios-fill3)',
+                          color: form.amenities.has(a.key) ? 'var(--ios-blue)' : 'var(--ios-label2)',
+                          border: form.amenities.has(a.key) ? '1px solid rgba(0,122,255,0.25)' : '1px solid transparent',
+                          transition: 'all 0.2s ease', cursor: 'pointer',
+                        }}
+                      >
+                        <span>{a.icon}</span> {a.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
-        {step < STEPS.length - 1 ? (
+        {/* Navigation */}
+        <div className="px-4 flex items-center justify-between">
           <button
             type="button"
-            onClick={() => setStep(step + 1)}
-            disabled={!canContinue()}
-            className="rc-btn-primary disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+            onClick={() => step > 0 && setStep(step - 1)}
+            disabled={step === 0}
+            style={{
+              height: 44, borderRadius: 13, padding: '0 20px',
+              background: 'var(--ios-fill3)', color: 'var(--ios-blue)',
+              fontSize: 15, fontWeight: 600, border: 'none', cursor: step === 0 ? 'not-allowed' : 'pointer',
+              opacity: step === 0 ? 0.3 : 1,
+            }}
           >
-            Continue →
+            ← Back
           </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setSubmitted(true)}
-            className="rc-btn-primary"
-          >
-            Publish Listing 🚀
-          </button>
-        )}
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            {STEPS.map((_, i) => (
+              <div key={i} style={{
+                width: i === step ? 16 : 6, height: 6, borderRadius: 3,
+                background: i === step ? 'var(--ios-blue)' : i < step ? 'var(--ios-green)' : 'var(--ios-fill3)',
+                transition: 'all 0.3s ease',
+              }} />
+            ))}
+          </div>
+
+          {step < STEPS.length - 1 ? (
+            <button
+              type="button"
+              onClick={() => setStep(step + 1)}
+              disabled={!canContinue()}
+              style={{
+                height: 44, borderRadius: 13, padding: '0 24px',
+                background: 'linear-gradient(135deg, #007AFF 0%, #0055D4 100%)',
+                color: '#fff', fontSize: 15, fontWeight: 600,
+                border: 'none', cursor: canContinue() ? 'pointer' : 'not-allowed',
+                opacity: canContinue() ? 1 : 0.4,
+                boxShadow: '0 4px 14px rgba(0,122,255,0.35)',
+              }}
+            >
+              Continue →
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setSubmitted(true)}
+              style={{
+                height: 44, borderRadius: 13, padding: '0 24px',
+                background: 'linear-gradient(135deg, #34C759 0%, #248A3D 100%)',
+                color: '#fff', fontSize: 15, fontWeight: 600,
+                border: 'none', cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(52,199,89,0.35)',
+              }}
+            >
+              Publish 🚀
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
