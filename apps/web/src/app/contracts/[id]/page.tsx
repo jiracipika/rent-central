@@ -5,73 +5,129 @@ import { formatCurrency } from '@rent-central/core';
 
 export default function ContractDetailPage() {
   return (
-    <div className="max-w-3xl mx-auto px-6 py-20 pt-28">
-      <div className="flex items-center gap-3 mb-8">
-        <Link href="/contracts" className="rc-btn-ghost px-3 py-1.5 text-sm">← Back</Link>
-        <h1 className="rc-section-title">Contract Details</h1>
-        <span className="rc-badge text-[10px] bg-emerald-50 text-emerald-700">Executed</span>
-      </div>
+    <div className="ios-page">
+      <div style={{ paddingTop: 60 }}>
 
-      {/* Contract info */}
-      <div className="rc-card-static p-6 mb-4" style={{ background: 'linear-gradient(135deg, #ECFDF5 0%, #EFF6FF 100%)' }}>
-        <h2 className="font-semibold" style={{ color: 'var(--rc-text)' }}>Modern Downtown Loft</h2>
-        <p className="text-xs mt-1" style={{ color: 'var(--rc-muted)' }}>123 King St W, Toronto, ON M5H 1A1</p>
-      </div>
-
-      {/* Parties */}
-      <div className="rc-card-static p-6 mb-4">
-        <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--rc-text)' }}>Parties</h2>
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <p className="text-xs font-medium" style={{ color: 'var(--rc-muted)' }}>Landlord</p>
-            <p className="text-sm font-semibold mt-1" style={{ color: 'var(--rc-text)' }}>Sarah Chen</p>
-            <p className="text-xs" style={{ color: 'var(--rc-muted)' }}>sarah@example.com</p>
-          </div>
-          <div>
-            <p className="text-xs font-medium" style={{ color: 'var(--rc-muted)' }}>Tenant</p>
-            <p className="text-sm font-semibold mt-1" style={{ color: 'var(--rc-text)' }}>Jordan Lee</p>
-            <p className="text-xs" style={{ color: 'var(--rc-muted)' }}>jordan@example.com</p>
-          </div>
+        {/* Back nav */}
+        <div className="flex items-center gap-2 px-4 pt-3 pb-1">
+          <Link
+            href="/contracts"
+            className="ios-btn-text flex items-center gap-1"
+            style={{ minHeight: 44 }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Contracts
+          </Link>
         </div>
-      </div>
 
-      {/* Terms */}
-      <div className="rc-card-static p-6 mb-4">
-        <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--rc-text)' }}>Terms</h2>
-        <div className="space-y-3">
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Lease Period</span><span className="text-sm font-medium" style={{ color: 'var(--rc-text)' }}>Apr 1, 2026 – Mar 31, 2027</span></div>
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Monthly Rent</span><span className="text-sm font-medium" style={{ color: 'var(--rc-text)' }}>{formatCurrency(2400)}</span></div>
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Security Deposit</span><span className="text-sm font-medium" style={{ color: 'var(--rc-text)' }}>{formatCurrency(2400)}</span></div>
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Utilities Included</span><span className="text-sm font-medium" style={{ color: 'var(--rc-green)' }}>Yes</span></div>
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Pet Policy</span><span className="text-sm font-medium" style={{ color: 'var(--rc-text)' }}>Pet Friendly</span></div>
-        </div>
-      </div>
-
-      {/* Signatures */}
-      <div className="rc-card-static p-6 mb-6">
-        <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--rc-text)' }}>Signatures</h2>
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-emerald-50">
-            <span className="text-lg">✅</span>
-            <div>
-              <p className="text-sm font-medium" style={{ color: 'var(--rc-text)' }}>Tenant signed</p>
-              <p className="text-xs" style={{ color: 'var(--rc-muted)' }}>Jordan Lee · Mar 25, 2026</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-emerald-50">
-            <span className="text-lg">✅</span>
-            <div>
-              <p className="text-sm font-medium" style={{ color: 'var(--rc-text)' }}>Landlord signed</p>
-              <p className="text-xs" style={{ color: 'var(--rc-muted)' }}>Sarah Chen · Mar 26, 2026</p>
+        {/* Header card */}
+        <div className="mx-4 mb-3">
+          <div
+            className="rounded-[18px] p-5"
+            style={{
+              background: 'linear-gradient(135deg, rgba(52,199,89,0.08) 0%, rgba(0,122,255,0.06) 100%)',
+              border: '0.5px solid rgba(52,199,89,0.20)',
+            }}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="ios-title3" style={{ fontSize: 18 }}>Modern Downtown Loft</p>
+                <p className="ios-subhead mt-0.5" style={{ color: 'var(--ios-label2)' }}>123 King St W, Toronto, ON M5H 1A1</p>
+              </div>
+              <span className="ios-status ios-status-completed flex-shrink-0">
+                <span className="ios-status-dot" />
+                Executed
+              </span>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Actions */}
-      <div className="flex gap-3">
-        <button className="rc-btn-secondary px-6 py-3 text-sm">📄 Download PDF</button>
-        <button className="rc-btn-ghost px-6 py-3 text-sm border border-gray-200 rounded-full">Send Copy</button>
+        {/* Parties */}
+        <p className="ios-section-header">Parties</p>
+        <div className="ios-group">
+          <div className="ios-row" style={{ minHeight: 60, alignItems: 'flex-start', paddingTop: 12, paddingBottom: 12, cursor: 'default' }}>
+            <div className="ios-row-icon" style={{ background: 'rgba(0,122,255,0.10)', width: 32, height: 32, borderRadius: 8 }}>
+              <span style={{ fontSize: 14 }}>🏠</span>
+            </div>
+            <div className="flex-1">
+              <p className="ios-caption1 mb-0.5" style={{ color: 'var(--ios-label3)' }}>Landlord</p>
+              <p className="ios-headline" style={{ fontSize: 15 }}>Sarah Chen</p>
+              <p className="ios-caption1 mt-0.5" style={{ color: 'var(--ios-label2)' }}>sarah@example.com</p>
+            </div>
+          </div>
+          <div className="ios-row" style={{ minHeight: 60, alignItems: 'flex-start', paddingTop: 12, paddingBottom: 12, cursor: 'default' }}>
+            <div className="ios-row-icon" style={{ background: 'rgba(52,199,89,0.10)', width: 32, height: 32, borderRadius: 8 }}>
+              <span style={{ fontSize: 14 }}>👤</span>
+            </div>
+            <div className="flex-1">
+              <p className="ios-caption1 mb-0.5" style={{ color: 'var(--ios-label3)' }}>Tenant</p>
+              <p className="ios-headline" style={{ fontSize: 15 }}>Jordan Lee</p>
+              <p className="ios-caption1 mt-0.5" style={{ color: 'var(--ios-label2)' }}>jordan@example.com</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Terms */}
+        <p className="ios-section-header mt-2">Lease Terms</p>
+        <div className="ios-group">
+          {[
+            { label: 'Lease Period', value: 'Apr 1, 2026 – Mar 31, 2027' },
+            { label: 'Monthly Rent', value: formatCurrency(2400) },
+            { label: 'Security Deposit', value: formatCurrency(2400) },
+            { label: 'Utilities Included', value: 'Yes', color: 'var(--ios-green)' },
+            { label: 'Pet Policy', value: 'Pet Friendly' },
+          ].map((row) => (
+            <div key={row.label} className="ios-row" style={{ cursor: 'default' }}>
+              <span className="ios-row-label" style={{ fontSize: 15, color: 'var(--ios-label2)' }}>{row.label}</span>
+              <span className="ios-row-value" style={{ fontWeight: 600, color: row.color || 'var(--ios-label)', fontSize: 15 }}>
+                {row.value}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Signatures */}
+        <p className="ios-section-header mt-2">Signatures</p>
+        <div className="ios-group">
+          {[
+            { label: 'Tenant signed', name: 'Jordan Lee', date: 'Mar 25, 2026', signed: true },
+            { label: 'Landlord signed', name: 'Sarah Chen', date: 'Mar 26, 2026', signed: true },
+          ].map((sig) => (
+            <div key={sig.label} className="ios-row" style={{ minHeight: 56, cursor: 'default' }}>
+              <div
+                className="ios-row-icon"
+                style={{ background: sig.signed ? 'rgba(52,199,89,0.12)' : 'rgba(255,149,0,0.10)' }}
+              >
+                <span style={{ fontSize: 15 }}>{sig.signed ? '✅' : '⏳'}</span>
+              </div>
+              <div className="flex-1">
+                <p className="ios-row-label" style={{ fontSize: 15 }}>{sig.label}</p>
+                <p className="ios-caption1 mt-0.5" style={{ color: 'var(--ios-label2)' }}>
+                  {sig.name} · {sig.date}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div className="px-4 mt-4 flex gap-3 mb-8">
+          <button
+            className="ios-btn flex-1"
+            style={{ height: 46, borderRadius: 13, background: 'rgba(0,122,255,0.10)', color: 'var(--ios-blue)', fontSize: 15, fontWeight: 600 }}
+          >
+            📄 Download PDF
+          </button>
+          <button
+            className="ios-btn flex-1"
+            style={{ height: 46, borderRadius: 13, background: 'var(--ios-fill3)', color: 'var(--ios-label)', fontSize: 15 }}
+          >
+            Send Copy
+          </button>
+        </div>
+
       </div>
     </div>
   );

@@ -1,60 +1,112 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { formatCurrency } from '@rent-central/core';
 
 const applications = [
-  { id: '1', name: 'Jordan Lee', property: 'Modern Downtown Loft', status: 'pending', date: 'Mar 20', income: '$85k' },
-  { id: '2', name: 'Aisha Khan', property: 'Modern Downtown Loft', status: 'under_review', date: 'Mar 18', income: '$72k' },
-  { id: '3', name: 'Marc Tremblay', property: 'Cozy Plateau Studio', status: 'approved', date: 'Mar 15', income: '$65k' },
-  { id: '4', name: 'Emily Park', property: 'Yaletown Condo', status: 'rejected', date: 'Mar 12', income: '$90k' },
-  { id: '5', name: 'Lena Kowalski', property: 'Spacious Family Home', status: 'pending', date: 'Mar 10', income: '$110k' },
+  { id: '1', name: 'Jordan Lee', initials: 'JL', color: '#007AFF', property: 'Modern Downtown Loft', status: 'pending' as const, date: 'Mar 20', income: '$85k/yr' },
+  { id: '2', name: 'Aisha Khan', initials: 'AK', color: '#AF52DE', property: 'Modern Downtown Loft', status: 'under_review' as const, date: 'Mar 18', income: '$72k/yr' },
+  { id: '3', name: 'Marc Tremblay', initials: 'MT', color: '#34C759', property: 'Cozy Plateau Studio', status: 'approved' as const, date: 'Mar 15', income: '$65k/yr' },
+  { id: '4', name: 'Emily Park', initials: 'EP', color: '#FF9500', property: 'Yaletown Condo', status: 'rejected' as const, date: 'Mar 12', income: '$90k/yr' },
+  { id: '5', name: 'Lena Kowalski', initials: 'LK', color: '#FF2D55', property: 'Spacious Family Home', status: 'pending' as const, date: 'Mar 10', income: '$110k/yr' },
 ];
 
-const statusStyles: Record<string, string> = {
-  pending: 'bg-amber-50 text-amber-700',
-  under_review: 'bg-blue-50 text-blue-700',
-  approved: 'bg-emerald-50 text-emerald-700',
-  rejected: 'bg-red-50 text-red-700',
+type Filter = 'All' | 'Pending' | 'Under Review' | 'Approved' | 'Rejected';
+
+const statusLabel: Record<string, string> = {
+  pending: 'Pending',
+  under_review: 'Under Review',
+  approved: 'Approved',
+  rejected: 'Rejected',
+};
+
+const statusClass: Record<string, string> = {
+  pending: 'ios-status-pending',
+  under_review: 'ios-status-under-review',
+  approved: 'ios-status-approved',
+  rejected: 'ios-status-rejected',
 };
 
 export default function LandlordApplicationsPage() {
+  const [filter, setFilter] = useState<Filter>('All');
+
+  const filtered = filter === 'All'
+    ? applications
+    : applications.filter((a) => statusLabel[a.status] === filter);
+
+  const pendingCount = applications.filter(a => a.status === 'pending' || a.status === 'under_review').length;
+
   return (
-    <div className="max-w-4xl mx-auto px-6 py-20 pt-28">
-      <h1 className="rc-section-title">Applicants</h1>
-      <p className="text-sm mt-1" style={{ color: 'var(--rc-muted)' }}>5 applications · 2 pending review</p>
+    <div className="ios-page">
+      <div style={{ paddingTop: 60 }}>
 
-      {/* Filter */}
-      <div className="flex gap-2 mt-6 mb-6">
-        {['All', 'Pending', 'Under Review', 'Approved', 'Rejected'].map((f) => (
-          <button key={f} className="rc-badge text-[11px] bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
-            {f}
-          </button>
-        ))}
-      </div>
+        {/* Header */}
+        <div className="ios-large-title-area">
+          <p className="ios-caption1 mb-0.5" style={{ color: 'var(--ios-blue)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Landlord
+          </p>
+          <h1 className="ios-large-title">Applicants</h1>
+          <p className="ios-subhead mt-1">
+            {applications.length} applications · {pendingCount} need review
+          </p>
+        </div>
 
-      <div className="space-y-3">
-        {applications.map((app) => (
-          <Link key={app.id} href={`/landlord/applications/${app.id}`} className="block rc-card p-5 transition-all duration-200">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center">
-                  <span className="text-sm font-bold" style={{ color: 'var(--rc-primary)' }}>
-                    {app.name.split(' ').map((n) => n[0]).join('')}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold" style={{ color: 'var(--rc-text)' }}>{app.name}</p>
-                  <p className="text-xs" style={{ color: 'var(--rc-muted)' }}>{app.property} · Applied {app.date}</p>
-                </div>
+        {/* Filter pills */}
+        <div className="ios-scroll-x py-1" style={{ gap: 6, paddingBottom: 6 }}>
+          {(['All', 'Pending', 'Under Review', 'Approved', 'Rejected'] as Filter[]).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`ios-pill ${filter === f ? 'ios-pill-active' : 'ios-pill-gray'}`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+
+        {/* Applications list */}
+        <p className="ios-section-header">{filtered.length} {filtered.length === 1 ? 'Applicant' : 'Applicants'}</p>
+        <div className="ios-group">
+          {filtered.map((app) => (
+            <Link
+              key={app.id}
+              href={`/landlord/applications/${app.id}`}
+              className="ios-row ios-card-lift"
+              style={{ minHeight: 68, alignItems: 'flex-start', paddingTop: 12, paddingBottom: 12 }}
+            >
+              {/* Avatar */}
+              <div
+                className="w-11 h-11 rounded-full flex items-center justify-center font-semibold text-white text-sm flex-shrink-0"
+                style={{ background: app.color }}
+              >
+                {app.initials}
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-medium" style={{ color: 'var(--rc-muted)' }}>{app.income}</span>
-                <span className={`rc-badge text-[10px] ${statusStyles[app.status]}`}>{app.status.replace('_', ' ')}</span>
+
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <p className="ios-headline" style={{ fontSize: 15 }}>{app.name}</p>
+                <p className="ios-caption1 mt-0.5 truncate" style={{ color: 'var(--ios-label2)' }}>
+                  {app.property}
+                </p>
+                <p className="ios-caption2 mt-0.5" style={{ color: 'var(--ios-label3)' }}>
+                  Applied {app.date} · {app.income}
+                </p>
               </div>
-            </div>
-          </Link>
-        ))}
+
+              {/* Status + chevron */}
+              <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                <span className={`ios-status ${statusClass[app.status]}`}>
+                  <span className="ios-status-dot" />
+                  {statusLabel[app.status]}
+                </span>
+                <span className="ios-chevron" style={{ fontSize: 18 }}>›</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className="h-6" />
+
       </div>
     </div>
   );

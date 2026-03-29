@@ -77,35 +77,56 @@ const features = [
   { icon: '✍️', color: '#AF52DE', label: 'Sign',     desc: 'Digital lease contracts' },
 ];
 
+const trustStats = [
+  { value: '80K+', label: 'Happy renters' },
+  { value: '12K+', label: 'Verified listings' },
+  { value: '4.9', label: 'App Store rating' },
+];
+
 export default function Home() {
   return (
-    <div className="ios-page">
+    <div className="ios-page ios-hero-bg">
 
       {/* ── Hero ── */}
-      <section style={{ paddingTop: 56 }}>
-        <div className="px-4 pt-10 pb-6 max-w-[640px] mx-auto text-center">
-          <p className="ios-footnote mb-2 font-semibold tracking-widest uppercase" style={{ color: 'var(--ios-blue)', letterSpacing: '0.08em' }}>
-            Canada's #1 Rental App
-          </p>
+      <section style={{ paddingTop: 60 }}>
+        <div className="px-4 pt-12 pb-8 max-w-[640px] mx-auto text-center">
+          <div
+            className="inline-flex items-center gap-1.5 mb-4 px-3 py-1.5 rounded-full"
+            style={{
+              background: 'rgba(0,122,255,0.10)',
+              border: '0.5px solid rgba(0,122,255,0.20)',
+            }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full animate-pulse"
+              style={{ background: 'var(--ios-blue)' }}
+            />
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--ios-blue)', letterSpacing: '0.02em' }}>
+              Canada&rsquo;s #1 Rental Platform
+            </span>
+          </div>
+
           <h1
             className="ios-large-title mb-3"
-            style={{ fontSize: 'clamp(32px, 6vw, 48px)', lineHeight: 1.1 }}
+            style={{ fontSize: 'clamp(34px, 6vw, 52px)', lineHeight: 1.08, letterSpacing: '-0.03em' }}
           >
-            Find Your Perfect Home
+            Find Your Perfect
+            <br />
+            <span style={{ color: 'var(--ios-blue)' }}>Home in Canada</span>
           </h1>
-          <p className="ios-subhead mb-8" style={{ fontSize: '17px', color: 'var(--ios-label2)' }}>
-            Browse, apply, and sign — all in one place.
+          <p className="ios-subhead mb-8 mx-auto max-w-sm" style={{ fontSize: 17, color: 'var(--ios-label2)', lineHeight: 1.5 }}>
+            Browse, apply, and sign — all in one beautiful place.
           </p>
 
-          {/* iOS-style search bar */}
+          {/* Search bar */}
           <div
-            className="flex items-center gap-3 mx-auto"
+            className="flex items-center gap-3 mx-auto ios-shadow-md"
             style={{
               background: 'var(--ios-grouped-bg2)',
-              borderRadius: 16,
-              padding: '6px 6px 6px 14px',
-              boxShadow: '0 1px 0 var(--ios-sep)',
+              borderRadius: 18,
+              padding: '6px 6px 6px 16px',
               maxWidth: 520,
+              border: '0.5px solid var(--ios-sep)',
             }}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--ios-label3)' }}>
@@ -115,12 +136,12 @@ export default function Home() {
               type="text"
               placeholder="Postal code, city, or neighbourhood"
               className="flex-1 bg-transparent border-none outline-none"
-              style={{ fontSize: 15, color: 'var(--ios-label)', letterSpacing: '-0.016em', padding: '8px 0' }}
+              style={{ fontSize: 15, color: 'var(--ios-label)', letterSpacing: '-0.016em', padding: '10px 0' }}
             />
             <Link
               href="/listings"
-              className="ios-btn ios-btn-blue flex-shrink-0"
-              style={{ height: 40, borderRadius: 12, padding: '0 20px', fontSize: 15 }}
+              className="ios-btn ios-btn-blue flex-shrink-0 ios-gradient-blue"
+              style={{ height: 42, borderRadius: 13, padding: '0 22px', fontSize: 15, fontWeight: 600 }}
             >
               Search
             </Link>
@@ -128,20 +149,35 @@ export default function Home() {
 
           {/* Popular cities */}
           <p className="ios-caption1 mt-4" style={{ color: 'var(--ios-label3)' }}>
-            Popular: &nbsp;
+            Popular:&nbsp;
             {['Toronto', 'Vancouver', 'Montréal', 'Calgary'].map((city, i) => (
               <span key={city}>
-                <Link href="/listings" className="ios-btn-text" style={{ fontSize: 12 }}>{city}</Link>
-                {i < 3 && <span style={{ color: 'var(--ios-sep)' }}> · </span>}
+                <Link href="/listings" className="ios-btn-text ios-link-hover" style={{ fontSize: 12 }}>{city}</Link>
+                {i < 3 && <span style={{ color: 'var(--ios-sep)', margin: '0 4px' }}>·</span>}
               </span>
             ))}
           </p>
+        </div>
+
+        {/* Trust stats */}
+        <div className="flex items-center justify-center gap-8 pb-8 px-4">
+          {trustStats.map((s, i) => (
+            <div key={s.label} className="text-center">
+              <p
+                className="ios-title2"
+                style={{ fontSize: 22, color: 'var(--ios-label)' }}
+              >
+                {s.value}
+              </p>
+              <p className="ios-caption1 mt-0.5">{s.label}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ── Featured Listings Carousel ── */}
       <section className="mb-6">
-        <div className="flex items-center justify-between px-4 pb-2">
+        <div className="flex items-center justify-between px-4 pb-3">
           <h2 className="ios-title3">Featured Listings</h2>
           <Link href="/listings" className="ios-btn-text" style={{ fontSize: 15 }}>See All</Link>
         </div>
@@ -150,23 +186,40 @@ export default function Home() {
             <Link
               key={listing.id}
               href={`/listings/${listing.id}`}
-              className="ios-listing-card"
-              style={{ width: 260 }}
+              className="ios-listing-card ios-card-lift"
+              style={{ width: 268 }}
             >
-              <div className="ios-listing-image" style={{ height: 172, aspectRatio: 'unset' }}>
-                <span className="text-4xl" style={{ opacity: 0.18 }}>🏠</span>
-                {listing.isNew && <span className="ios-listing-tag">New</span>}
+              <div className="ios-listing-image" style={{ height: 178, aspectRatio: 'unset' }}>
+                {/* Gradient placeholder background */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(135deg, hsl(${(parseInt(listing.id) * 47) % 360}, 60%, 85%) 0%, hsl(${(parseInt(listing.id) * 47 + 60) % 360}, 50%, 75%) 100%)`,
+                    opacity: 0.35,
+                  }}
+                />
+                <span className="text-4xl" style={{ opacity: 0.25, position: 'relative' }}>🏠</span>
+                {listing.isNew && (
+                  <span
+                    className="ios-listing-tag"
+                    style={{ background: 'var(--ios-blue)', backdropFilter: 'blur(8px)' }}
+                  >
+                    New
+                  </span>
+                )}
                 <button className="ios-heart-btn" onClick={(e) => e.preventDefault()}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-4 h-4" style={{ color: '#8E8E93' }}>
                     <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
                   </svg>
                 </button>
               </div>
-              <div className="px-3 py-3">
+              <div className="px-3 pb-3 pt-2.5">
                 <p className="ios-listing-price">{formatCurrency(listing.pricePerTerm[12])}<span>/mo</span></p>
                 <p className="ios-headline mt-0.5 truncate" style={{ fontSize: 15 }}>{listing.title}</p>
-                <p className="ios-caption1 mt-0.5 truncate">{listing.address}, {listing.city}</p>
-                <div className="flex items-center gap-2 mt-2">
+                <p className="ios-caption1 mt-0.5 truncate" style={{ color: 'var(--ios-label2)' }}>
+                  {listing.address}, {listing.city}
+                </p>
+                <div className="flex items-center gap-1.5 mt-2.5">
                   <span className="ios-pill ios-pill-gray" style={{ fontSize: 11 }}>
                     {listing.bedrooms === 0 ? 'Studio' : `${listing.bedrooms} bed`}
                   </span>
@@ -174,7 +227,7 @@ export default function Home() {
                     {listing.bathrooms} bath
                   </span>
                   {listing.petFriendly && (
-                    <span className="ios-pill ios-pill-green" style={{ fontSize: 11 }}>🐾 Pets OK</span>
+                    <span className="ios-pill ios-pill-green" style={{ fontSize: 11 }}>🐾 Pets</span>
                   )}
                 </div>
               </div>
@@ -186,13 +239,13 @@ export default function Home() {
       {/* ── Browse by City ── */}
       <section className="mb-6">
         <p className="ios-section-header">Browse by City</p>
-        <div className="ios-group">
-          {cities.map((city, i) => (
+        <div className="ios-group ios-shadow-xs">
+          {cities.map((city) => (
             <Link key={city.name} href="/listings" className="ios-row" style={{ minHeight: 52 }}>
-              <span className="text-xl">{city.icon}</span>
+              <span className="text-xl" style={{ width: 28, textAlign: 'center' }}>{city.icon}</span>
               <span className="ios-row-label">{city.name}</span>
               <span className="ios-row-value ios-footnote">{city.count} rentals</span>
-              <span className="ios-chevron">›</span>
+              <span className="ios-chevron" style={{ fontSize: 20 }}>›</span>
             </Link>
           ))}
         </div>
@@ -201,26 +254,23 @@ export default function Home() {
       {/* ── How It Works ── */}
       <section className="mb-6">
         <p className="ios-section-header">How Rent Central Works</p>
-        <div className="ios-scroll-x gap-3">
+        <div className="ios-scroll-x" style={{ gap: 10, paddingBottom: 8 }}>
           {features.map((f, i) => (
             <div
               key={f.label}
-              style={{
-                width: 160,
-                background: 'var(--ios-grouped-bg2)',
-                borderRadius: 16,
-                padding: '20px 16px',
-                flexShrink: 0,
-              }}
+              className="ios-card ios-shadow-xs"
+              style={{ width: 164, padding: '20px 16px', flexShrink: 0 }}
             >
               <div
                 className="w-12 h-12 rounded-[14px] flex items-center justify-center text-2xl mb-3"
-                style={{ background: `${f.color}18` }}
+                style={{ background: `${f.color}15` }}
               >
                 {f.icon}
               </div>
               <p className="ios-headline" style={{ fontSize: 15 }}>{i + 1}. {f.label}</p>
-              <p className="ios-caption1 mt-1 leading-snug">{f.desc}</p>
+              <p className="ios-caption1 mt-1 leading-snug" style={{ color: 'var(--ios-label2)' }}>
+                {f.desc}
+              </p>
             </div>
           ))}
         </div>
@@ -228,11 +278,21 @@ export default function Home() {
 
       {/* ── Landlord CTA ── */}
       <section className="mb-6 px-4">
-        <div
-          className="rounded-[20px] overflow-hidden p-6"
-          style={{ background: 'var(--ios-blue)' }}
-        >
-          <p className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.65)' }}>
+        <div className="ios-cta-banner ios-cta-banner-blue ios-shadow-blue">
+          {/* Subtle background pattern */}
+          <div
+            style={{
+              position: 'absolute', top: -40, right: -40, width: 180, height: 180,
+              borderRadius: '50%', background: 'rgba(255,255,255,0.06)', pointerEvents: 'none',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute', bottom: -30, left: 60, width: 120, height: 120,
+              borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none',
+            }}
+          />
+          <p className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.60)' }}>
             For Landlords
           </p>
           <h2 className="ios-title3 mb-1" style={{ color: '#fff', fontSize: 22 }}>List Your Property</h2>
@@ -248,37 +308,47 @@ export default function Home() {
               height: 44,
               borderRadius: 12,
               fontSize: 15,
+              fontWeight: 600,
               display: 'inline-flex',
-              backdropFilter: 'blur(8px)',
+              backdropFilter: 'blur(12px)',
+              border: '0.5px solid rgba(255,255,255,0.30)',
             }}
           >
-            Post a Listing
+            Post a Listing &rarr;
           </Link>
         </div>
       </section>
 
       {/* ── Sign Up CTA ── */}
-      <section className="mb-8 px-4">
+      <section className="mb-10 px-4">
         <div
+          className="ios-shadow-sm"
           style={{
             background: 'var(--ios-grouped-bg2)',
-            borderRadius: 20,
-            padding: '24px 20px',
+            borderRadius: 22,
+            padding: '28px 24px',
             textAlign: 'center',
+            border: '0.5px solid var(--ios-sep)',
           }}
         >
+          <div
+            className="w-12 h-12 rounded-[14px] flex items-center justify-center text-xl mx-auto mb-4"
+            style={{ background: 'rgba(0,122,255,0.10)' }}
+          >
+            🏠
+          </div>
           <p className="ios-title3 mb-2" style={{ fontSize: 20 }}>Ready to Find Your Home?</p>
           <p className="ios-subhead mb-6" style={{ color: 'var(--ios-label2)', fontSize: 15 }}>
             Join 80,000+ Canadians who found their perfect rental.
           </p>
           <div className="flex gap-3 justify-center">
-            <Link href="/sign-up" className="ios-btn ios-btn-blue" style={{ height: 44, borderRadius: 12, padding: '0 24px', fontSize: 15 }}>
+            <Link href="/sign-up" className="ios-btn ios-btn-blue ios-gradient-blue ios-shadow-blue" style={{ height: 46, borderRadius: 13, padding: '0 28px', fontSize: 16, fontWeight: 600 }}>
               Get Started
             </Link>
             <Link
               href="/listings"
               className="ios-btn"
-              style={{ height: 44, borderRadius: 12, padding: '0 24px', fontSize: 15, background: 'var(--ios-fill3)', color: 'var(--ios-blue)' }}
+              style={{ height: 46, borderRadius: 13, padding: '0 28px', fontSize: 16, background: 'var(--ios-fill3)', color: 'var(--ios-blue)', fontWeight: 600 }}
             >
               Browse
             </Link>

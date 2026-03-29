@@ -862,3 +862,291 @@
   .ios-ease   { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
   .tap-scale:active { transform: scale(0.97); opacity: 0.85; }
 }
+
+/* ═══════════════════════════════════════════════
+   ENHANCED SHADOWS
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-shadow-xs {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(0,0,0,0.04);
+  }
+  .ios-shadow-sm {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
+  }
+  .ios-shadow {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.04);
+  }
+  .ios-shadow-md {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .ios-shadow-lg {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .ios-shadow-blue {
+    box-shadow: 0 4px 20px rgba(0,122,255,0.25), 0 1px 4px rgba(0,122,255,0.15);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   STAT / METRIC CARDS
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-stat-card {
+    background: var(--ios-grouped-bg2);
+    border-radius: var(--ios-r-lg);
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .ios-stat-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .ios-stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  }
+  .ios-stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.006em;
+    color: var(--ios-label3);
+    margin-top: 4px;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   ENHANCED CARD LIFT ON HOVER
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-card-lift {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .ios-card-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .ios-card-lift:active {
+    transform: scale(0.98) translateY(0);
+    box-shadow: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   HERO / BANNER GRADIENTS
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-hero-bg {
+    background: var(--ios-grouped-bg);
+    position: relative;
+  }
+  .ios-hero-bg::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(ellipse at center,
+      rgba(0,122,255,0.08) 0%,
+      rgba(0,122,255,0.03) 50%,
+      transparent 70%);
+    pointer-events: none;
+  }
+
+  .ios-gradient-blue {
+    background: linear-gradient(135deg, #007AFF 0%, #0055D4 100%);
+  }
+  .ios-gradient-green {
+    background: linear-gradient(135deg, #34C759 0%, #248A3D 100%);
+  }
+  .ios-gradient-purple {
+    background: linear-gradient(135deg, #AF52DE 0%, #7B2D8B 100%);
+  }
+  .ios-gradient-orange {
+    background: linear-gradient(135deg, #FF9500 0%, #D4680A 100%);
+  }
+
+  .ios-gradient-card-blue {
+    background: linear-gradient(135deg, rgba(0,122,255,0.10) 0%, rgba(0,122,255,0.04) 100%);
+  }
+  .ios-gradient-card-green {
+    background: linear-gradient(135deg, rgba(52,199,89,0.12) 0%, rgba(52,199,89,0.04) 100%);
+  }
+  .ios-gradient-card-orange {
+    background: linear-gradient(135deg, rgba(255,149,0,0.12) 0%, rgba(255,149,0,0.04) 100%);
+  }
+  .ios-gradient-card-purple {
+    background: linear-gradient(135deg, rgba(175,82,222,0.12) 0%, rgba(175,82,222,0.04) 100%);
+  }
+  .ios-gradient-card-red {
+    background: linear-gradient(135deg, rgba(255,59,48,0.10) 0%, rgba(255,59,48,0.04) 100%);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   ADMIN / DATA TABLE
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-table-wrap {
+    background: var(--ios-grouped-bg2);
+    border-radius: var(--ios-r-lg);
+    overflow: hidden;
+  }
+  .ios-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .ios-table thead tr {
+    border-bottom: 0.5px solid var(--ios-sep);
+  }
+  .ios-table th {
+    text-align: left;
+    padding: 12px 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ios-label3);
+  }
+  .ios-table th:last-child { text-align: right; }
+  .ios-table td {
+    padding: 14px 20px;
+    font-size: 14px;
+    letter-spacing: -0.016em;
+    color: var(--ios-label);
+    vertical-align: middle;
+  }
+  .ios-table td:last-child { text-align: right; }
+  .ios-table tbody tr {
+    border-top: 0.5px solid var(--ios-sep);
+    transition: background 0.1s ease;
+  }
+  .ios-table tbody tr:first-child { border-top: none; }
+  .ios-table tbody tr:hover { background: var(--ios-fill4); }
+}
+
+/* ═══════════════════════════════════════════════
+   STATUS PILLS (unified system)
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-status { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 11px; font-size: 11px; font-weight: 600; letter-spacing: -0.006em; }
+  .ios-status-active  { background: rgba(52,199,89,0.12);  color: var(--ios-green); }
+  .ios-status-rented  { background: rgba(0,122,255,0.12);  color: var(--ios-blue); }
+  .ios-status-paused  { background: rgba(255,149,0,0.12);  color: var(--ios-orange); }
+  .ios-status-draft   { background: var(--ios-fill3);       color: var(--ios-label2); }
+  .ios-status-pending { background: rgba(255,149,0,0.12);  color: var(--ios-orange); }
+  .ios-status-open    { background: rgba(255,59,48,0.12);  color: var(--ios-red); }
+  .ios-status-reviewed{ background: rgba(0,122,255,0.12);  color: var(--ios-blue); }
+  .ios-status-resolved{ background: rgba(52,199,89,0.12);  color: var(--ios-green); }
+  .ios-status-completed{background: rgba(52,199,89,0.12);  color: var(--ios-green); }
+  .ios-status-failed  { background: rgba(255,59,48,0.12);  color: var(--ios-red); }
+  .ios-status-approved{ background: rgba(52,199,89,0.12);  color: var(--ios-green); }
+  .ios-status-rejected{ background: rgba(255,59,48,0.12);  color: var(--ios-red); }
+  .ios-status-under-review { background: rgba(0,122,255,0.12); color: var(--ios-blue); }
+  .ios-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+}
+
+/* ═══════════════════════════════════════════════
+   PAGE HEADER (consistent across pages)
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-page-header {
+    padding: 20px 16px 8px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .ios-page-header-wide {
+    padding: 20px 20px 8px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   EMPTY STATE
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 64px 32px;
+    gap: 8px;
+  }
+  .ios-empty-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--ios-fill3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   GLASS CTA BANNER
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-cta-banner {
+    border-radius: var(--ios-r-xl);
+    overflow: hidden;
+    padding: 24px;
+    position: relative;
+  }
+  .ios-cta-banner-blue {
+    background: linear-gradient(135deg, #007AFF 0%, #0040D4 100%);
+  }
+  .ios-cta-banner-dark {
+    background: linear-gradient(135deg, #1C1C1E 0%, #2C2C2E 100%);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   HOVER LINK UNDERLINE
+═══════════════════════════════════════════════ */
+@layer utilities {
+  .ios-link-hover {
+    transition: opacity 0.15s ease;
+  }
+  .ios-link-hover:hover { opacity: 0.65; }
+
+  .ios-nav-link-hover {
+    border-radius: 8px;
+    padding: 6px 10px;
+    transition: background 0.15s ease;
+  }
+  .ios-nav-link-hover:hover {
+    background: var(--ios-fill4);
+  }
+}
+
+/* ── Pulse dots (placeholder loading) ── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 1; }
+}
+
+@keyframes ios-fade-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-ios-fade-in {
+  animation: ios-fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}

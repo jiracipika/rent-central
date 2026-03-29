@@ -6,6 +6,8 @@ import { formatCurrency } from '@rent-central/core';
 
 const applicant = {
   name: 'Jordan Lee',
+  initials: 'JL',
+  color: '#007AFF',
   email: 'jordan@example.com',
   phone: '(647) 555-0123',
   applied: 'March 20, 2026',
@@ -13,6 +15,8 @@ const applicant = {
   moveIn: 'April 1, 2026',
   income: '$85,000/year',
   employer: 'Shopify',
+  jobTitle: 'Software Engineer',
+  note: "I'm a quiet professional who works from home. I've been renting for 5 years with no issues. Looking for a long-term home.",
   score: 92,
   references: [
     { name: 'Previous Landlord', contact: 'Priya Patel', phone: '(416) 555-0199' },
@@ -20,82 +24,181 @@ const applicant = {
   ],
 };
 
+const statusDisplay: Record<string, { cls: string; label: string }> = {
+  pending:      { cls: 'ios-status-pending',      label: 'Pending' },
+  under_review: { cls: 'ios-status-under-review', label: 'Under Review' },
+  approved:     { cls: 'ios-status-approved',     label: 'Approved' },
+  rejected:     { cls: 'ios-status-rejected',     label: 'Rejected' },
+};
+
 export default function ApplicationDetailPage() {
   const [status, setStatus] = useState<'pending' | 'under_review' | 'approved' | 'rejected'>('pending');
   const [note, setNote] = useState('');
 
-  const statusColors: Record<string, string> = {
-    pending: 'bg-amber-50 text-amber-700',
-    under_review: 'bg-blue-50 text-blue-700',
-    approved: 'bg-emerald-50 text-emerald-700',
-    rejected: 'bg-red-50 text-red-700',
-  };
+  const s = statusDisplay[status];
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-20 pt-28">
-      <div className="flex items-center gap-3 mb-8">
-        <Link href="/landlord/applications" className="rc-btn-ghost px-3 py-1.5 text-sm">← Back</Link>
-        <h1 className="rc-section-title">Application</h1>
-        <span className={`rc-badge text-[10px] ml-2 ${statusColors[status]}`}>{status.replace('_', ' ')}</span>
-      </div>
+    <div className="ios-page" style={{ paddingBottom: 100 }}>
+      <div style={{ paddingTop: 60 }}>
 
-      {/* Score + Status */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="rc-card-static p-5 text-center">
-          <p className="text-3xl font-bold" style={{ color: applicant.score >= 80 ? 'var(--rc-green)' : 'var(--rc-orange)' }}>{applicant.score}</p>
-          <p className="text-xs mt-1" style={{ color: 'var(--rc-muted)' }}>Match Score</p>
+        {/* Back nav */}
+        <div className="flex items-center gap-2 px-4 pt-3 pb-1">
+          <Link
+            href="/landlord/applications"
+            className="ios-btn-text flex items-center gap-1"
+            style={{ minHeight: 44 }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Applicants
+          </Link>
         </div>
-        <div className="rc-card-static p-5 text-center">
-          <p className="text-3xl font-bold" style={{ color: 'var(--rc-text)' }}>{formatCurrency(2400)}</p>
-          <p className="text-xs mt-1" style={{ color: 'var(--rc-muted)' }}>Monthly Rent</p>
-        </div>
-      </div>
 
-      {/* Applicant info */}
-      <div className="rc-card-static p-6 mb-4">
-        <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--rc-text)' }}>👤 Applicant</h2>
-        <div className="space-y-3">
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Name</span><span className="text-sm font-medium" style={{ color: 'var(--rc-text)' }}>{applicant.name}</span></div>
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Email</span><span className="text-sm" style={{ color: 'var(--rc-primary)' }}>{applicant.email}</span></div>
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Phone</span><span className="text-sm" style={{ color: 'var(--rc-text)' }}>{applicant.phone}</span></div>
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Applied</span><span className="text-sm" style={{ color: 'var(--rc-text)' }}>{applicant.applied}</span></div>
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Desired Term</span><span className="text-sm" style={{ color: 'var(--rc-text)' }}>{applicant.term}</span></div>
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Move-in Date</span><span className="text-sm" style={{ color: 'var(--rc-text)' }}>{applicant.moveIn}</span></div>
+        {/* Header */}
+        <div className="px-4 pb-4 flex items-start gap-4">
+          <div
+            className="w-14 h-14 rounded-full flex items-center justify-center font-semibold text-white text-lg flex-shrink-0"
+            style={{ background: applicant.color }}
+          >
+            {applicant.initials}
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="ios-large-title" style={{ fontSize: 24 }}>{applicant.name}</h1>
+              <span className={`ios-status ${s.cls}`}>
+                <span className="ios-status-dot" />
+                {s.label}
+              </span>
+            </div>
+            <p className="ios-subhead mt-0.5" style={{ color: 'var(--ios-label2)' }}>
+              Applied {applicant.applied}
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Employment */}
-      <div className="rc-card-static p-6 mb-4">
-        <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--rc-text)' }}>💼 Employment</h2>
-        <div className="space-y-3">
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Employer</span><span className="text-sm font-medium" style={{ color: 'var(--rc-text)' }}>{applicant.employer}</span></div>
-          <div className="flex justify-between"><span className="text-sm" style={{ color: 'var(--rc-muted)' }}>Income</span><span className="text-sm font-medium" style={{ color: 'var(--rc-text)' }}>{applicant.income}</span></div>
+        {/* Score + Rent stats */}
+        <div className="px-4 mb-4 grid grid-cols-2 gap-3">
+          <div
+            className="rounded-[16px] p-4 text-center ios-shadow-xs"
+            style={{ background: applicant.score >= 80 ? 'rgba(52,199,89,0.08)' : 'rgba(255,149,0,0.08)', border: '0.5px solid rgba(52,199,89,0.18)' }}
+          >
+            <p className="text-3xl font-bold" style={{ color: applicant.score >= 80 ? 'var(--ios-green)' : 'var(--ios-orange)' }}>
+              {applicant.score}
+            </p>
+            <p className="ios-caption1 mt-1" style={{ color: 'var(--ios-label2)' }}>Match Score</p>
+          </div>
+          <div
+            className="rounded-[16px] p-4 text-center ios-shadow-xs"
+            style={{ background: 'rgba(0,122,255,0.06)', border: '0.5px solid rgba(0,122,255,0.14)' }}
+          >
+            <p className="text-3xl font-bold" style={{ color: 'var(--ios-blue)' }}>
+              {formatCurrency(2400)}
+            </p>
+            <p className="ios-caption1 mt-1" style={{ color: 'var(--ios-label2)' }}>Monthly Rent</p>
+          </div>
         </div>
-      </div>
 
-      {/* References */}
-      <div className="rc-card-static p-6 mb-4">
-        <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--rc-text)' }}>📞 References</h2>
-        <div className="space-y-3">
-          {applicant.references.map((r) => (
-            <div key={r.name}>
-              <p className="text-sm font-medium" style={{ color: 'var(--rc-text)' }}>{r.contact}</p>
-              <p className="text-xs" style={{ color: 'var(--rc-muted)' }}>{r.name} · {r.phone}</p>
+        {/* Applicant info */}
+        <p className="ios-section-header">Applicant</p>
+        <div className="ios-group">
+          {[
+            { label: 'Email',       value: applicant.email,   color: 'var(--ios-blue)' },
+            { label: 'Phone',       value: applicant.phone },
+            { label: 'Desired Term',value: applicant.term },
+            { label: 'Move-in Date',value: applicant.moveIn },
+          ].map((row) => (
+            <div key={row.label} className="ios-row" style={{ cursor: 'default' }}>
+              <span className="ios-row-label" style={{ fontSize: 15, color: 'var(--ios-label2)' }}>{row.label}</span>
+              <span className="ios-row-value" style={{ fontWeight: 500, color: row.color || 'var(--ios-label)', fontSize: 15 }}>
+                {row.value}
+              </span>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Note */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--rc-text2)' }}>Internal Note</label>
-        <textarea className="rc-input min-h-[80px] resize-none" placeholder="Add a private note..." value={note} onChange={(e) => setNote(e.target.value)} />
-      </div>
+        {/* Note from applicant */}
+        {applicant.note && (
+          <>
+            <p className="ios-section-header mt-2">Note from Applicant</p>
+            <div className="mx-4 mb-2 rounded-[14px] p-4 ios-shadow-xs" style={{ background: 'var(--ios-bg2)', border: '0.5px solid var(--ios-separator)' }}>
+              <p className="ios-subhead" style={{ lineHeight: 1.5, color: 'var(--ios-label)' }}>{applicant.note}</p>
+            </div>
+          </>
+        )}
 
-      {/* Actions */}
-      <div className="flex gap-3">
-        <button onClick={() => setStatus('rejected')} className="flex-1 py-3 rounded-full text-sm font-semibold border-2 border-red-200 text-red-600 hover:bg-red-50 transition-colors duration-200">Decline</button>
-        <button onClick={() => setStatus('approved')} className="flex-1 rc-btn-primary">Approve</button>
+        {/* Employment */}
+        <p className="ios-section-header mt-2">Employment</p>
+        <div className="ios-group">
+          {[
+            { label: 'Employer',  value: applicant.employer },
+            { label: 'Job Title', value: applicant.jobTitle },
+            { label: 'Income',    value: applicant.income, color: 'var(--ios-green)' },
+          ].map((row) => (
+            <div key={row.label} className="ios-row" style={{ cursor: 'default' }}>
+              <span className="ios-row-label" style={{ fontSize: 15, color: 'var(--ios-label2)' }}>{row.label}</span>
+              <span className="ios-row-value" style={{ fontWeight: 500, color: row.color || 'var(--ios-label)', fontSize: 15 }}>
+                {row.value}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* References */}
+        <p className="ios-section-header mt-2">References</p>
+        <div className="ios-group">
+          {applicant.references.map((r) => (
+            <div key={r.name} className="ios-row" style={{ minHeight: 56, cursor: 'default' }}>
+              <div className="ios-row-icon" style={{ background: 'rgba(0,122,255,0.10)' }}>
+                <span style={{ fontSize: 14 }}>📞</span>
+              </div>
+              <div className="flex-1">
+                <p className="ios-row-label" style={{ fontSize: 15 }}>{r.contact}</p>
+                <p className="ios-caption1 mt-0.5" style={{ color: 'var(--ios-label2)' }}>{r.name} · {r.phone}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Internal note */}
+        <p className="ios-section-header mt-2">Internal Note</p>
+        <div className="mx-4 mb-2">
+          <textarea
+            className="ios-input-standalone"
+            style={{ minHeight: 80, resize: 'none', lineHeight: 1.5, borderRadius: 14 }}
+            placeholder="Add a private note visible only to you…"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+          />
+        </div>
+        <p className="ios-section-footer">This note is only visible to you and won't be shared with the applicant.</p>
+
+        {/* Actions */}
+        <div className="px-4 mt-4 flex gap-3 mb-8">
+          <button
+            onClick={() => setStatus('rejected')}
+            className="ios-btn flex-1"
+            style={{
+              height: 50, borderRadius: 14,
+              background: status === 'rejected' ? 'rgba(255,59,48,0.12)' : 'var(--ios-fill3)',
+              color: 'var(--ios-red)',
+              fontSize: 15, fontWeight: 600,
+              border: status === 'rejected' ? '1px solid rgba(255,59,48,0.25)' : 'none',
+            }}
+          >
+            Decline
+          </button>
+          <button
+            onClick={() => setStatus('approved')}
+            className="ios-btn ios-gradient-green ios-shadow-blue flex-1"
+            style={{ height: 50, borderRadius: 14, fontSize: 15, fontWeight: 600, color: '#fff',
+              opacity: status === 'approved' ? 0.7 : 1,
+            }}
+          >
+            {status === 'approved' ? 'Approved ✓' : 'Approve'}
+          </button>
+        </div>
+
       </div>
     </div>
   );

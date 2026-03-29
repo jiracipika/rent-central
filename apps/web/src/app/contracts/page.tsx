@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { formatCurrency } from '@rent-central/core';
 
@@ -22,46 +21,79 @@ const contracts = [
   },
 ];
 
-const statusStyles: Record<string, string> = {
-  executed: 'bg-emerald-50 text-emerald-700',
-  awaiting_renter: 'bg-amber-50 text-amber-700',
-  awaiting_landlord: 'bg-blue-50 text-blue-700',
-  expired: 'bg-gray-100 text-gray-600',
+const statusDisplay: Record<string, { label: string; cls: string; icon: string }> = {
+  executed:          { label: 'Signed',            cls: 'ios-status-completed',    icon: '✍️' },
+  awaiting_renter:   { label: 'Awaiting Signature', cls: 'ios-status-pending',      icon: '📋' },
+  awaiting_landlord: { label: 'Your Signature Needed', cls: 'ios-status-under-review', icon: '📝' },
+  expired:           { label: 'Expired',            cls: 'ios-status-draft',        icon: '📄' },
 };
 
 export default function ContractsPage() {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-20 pt-28">
-      <h1 className="rc-section-title">Contracts</h1>
-      <p className="text-sm mt-1" style={{ color: 'var(--rc-muted)' }}>Manage rental agreements</p>
+    <div className="ios-page">
+      <div style={{ paddingTop: 60 }}>
 
-      <div className="space-y-4 mt-8">
-        {contracts.map((c) => (
-          <Link key={c.id} href={`/contracts/${c.id}`} className="block rc-card p-5">
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="flex items-center gap-3">
-                  <h3 className="font-semibold text-sm" style={{ color: 'var(--rc-text)' }}>{c.property}</h3>
-                  <span className={`rc-badge text-[10px] ${statusStyles[c.status]}`}>
-                    {c.status.replace('_', ' ')}
-                  </span>
+        {/* Header */}
+        <div className="ios-large-title-area">
+          <h1 className="ios-large-title">Contracts</h1>
+          <p className="ios-subhead mt-1">Rental agreements and leases</p>
+        </div>
+
+        {/* Contract cards */}
+        <p className="ios-section-header">{contracts.length} Agreements</p>
+        <div className="space-y-0 px-4">
+          {contracts.map((c) => {
+            const s = statusDisplay[c.status] || statusDisplay.expired;
+            const needsSign = c.status === 'awaiting_renter' || c.status === 'awaiting_landlord';
+            return (
+              <Link
+                key={c.id}
+                href={`/contracts/${c.id}`}
+                className="ios-card ios-card-lift ios-shadow-xs mb-3 block"
+                style={{ padding: '16px' }}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <div
+                      className="w-10 h-10 rounded-[12px] flex items-center justify-center text-xl flex-shrink-0"
+                      style={{ background: needsSign ? 'rgba(255,149,0,0.10)' : 'rgba(52,199,89,0.10)' }}
+                    >
+                      {s.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="ios-headline truncate" style={{ fontSize: 15 }}>{c.property}</p>
+                      <p className="ios-caption1 mt-0.5" style={{ color: 'var(--ios-label2)' }}>
+                        {c.tenant} · {formatCurrency(c.rent)}/mo
+                      </p>
+                      <p className="ios-caption2 mt-0.5">
+                        {new Date(c.startDate).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })}
+                        {' – '}
+                        {new Date(c.endDate).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                    <span className={`ios-status ${s.cls}`}>
+                      <span className="ios-status-dot" />
+                      {s.label}
+                    </span>
+                    {needsSign && (
+                      <span
+                        className="ios-pill ios-pill-active"
+                        style={{ fontSize: 11, height: 24 }}
+                      >
+                        Sign Now
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <p className="text-xs mt-1" style={{ color: 'var(--rc-muted)' }}>
-                  Tenant: {c.tenant} · {formatCurrency(c.rent)}/mo
-                </p>
-                <p className="text-xs mt-0.5" style={{ color: 'var(--rc-muted)' }}>
-                  {new Date(c.startDate).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })} – {new Date(c.endDate).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' })}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                {c.status !== 'executed' && (
-                  <span className="text-xs font-medium px-3 py-1.5 rounded-full bg-blue-600 text-white">Sign Now</span>
-                )}
-                <span style={{ color: 'var(--rc-muted)' }}>›</span>
-              </div>
-            </div>
-          </Link>
-        ))}
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="h-6" />
+
       </div>
     </div>
   );

@@ -10,27 +10,26 @@ export default function SignInPage() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-4"
-      style={{ background: 'var(--ios-grouped-bg)', paddingTop: 'var(--ios-nav)' }}
+      className="min-h-screen flex flex-col items-center justify-center px-4 ios-hero-bg"
+      style={{ paddingTop: 'var(--ios-nav)', paddingBottom: 40 }}
     >
       <div className="w-full max-w-[400px]">
 
         {/* App icon + title */}
         <div className="text-center mb-8">
           <div
-            className="w-16 h-16 rounded-[18px] flex items-center justify-center mx-auto mb-4"
-            style={{ background: 'var(--ios-blue)' }}
+            className="w-[68px] h-[68px] rounded-[20px] flex items-center justify-center mx-auto mb-4 ios-gradient-blue ios-shadow-blue"
           >
             <svg viewBox="0 0 20 20" fill="white" className="w-9 h-9">
               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h3a1 1 0 001-1v-2a1 1 0 011-1 1 1 0 011 1v2a1 1 0 001 1h3a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
             </svg>
           </div>
-          <h1 className="ios-title1" style={{ fontSize: 26 }}>Welcome Back</h1>
-          <p className="ios-subhead mt-1" style={{ color: 'var(--ios-label2)' }}>Sign in to Rent Central</p>
+          <h1 className="ios-title1" style={{ fontSize: 28 }}>Welcome Back</h1>
+          <p className="ios-subhead mt-1.5" style={{ color: 'var(--ios-label2)' }}>Sign in to Rent Central</p>
         </div>
 
         {/* Email + Password inputs */}
-        <div className="ios-input-group">
+        <div className="ios-input-group ios-shadow-xs mb-0">
           <div className="ios-input-row">
             <span className="ios-input-label">Email</span>
             <input
@@ -56,7 +55,7 @@ export default function SignInPage() {
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="flex-shrink-0 ios-btn-text"
-              style={{ fontSize: 14, minWidth: 0 }}
+              style={{ fontSize: 14, minWidth: 0, fontWeight: 500 }}
             >
               {showPassword ? 'Hide' : 'Show'}
             </button>
@@ -64,27 +63,29 @@ export default function SignInPage() {
         </div>
 
         {/* Forgot password */}
-        <div className="flex justify-end px-4 mb-6">
+        <div className="flex justify-end px-1 mt-2 mb-6">
           <button className="ios-btn-text" style={{ fontSize: 14 }}>Forgot Password?</button>
         </div>
 
         {/* Sign In button */}
-        <div className="px-0 mb-4">
-          <button className="ios-btn ios-btn-blue w-full" style={{ height: 50, borderRadius: 14, fontSize: 17 }}>
-            Sign In
-          </button>
-        </div>
+        <button
+          className="ios-btn ios-btn-blue ios-gradient-blue ios-shadow-blue w-full mb-4"
+          style={{ height: 50, borderRadius: 14, fontSize: 17, fontWeight: 600 }}
+          disabled={!email || !password}
+        >
+          Sign In
+        </button>
 
         {/* Divider */}
         <div className="flex items-center gap-3 mb-4">
           <div className="flex-1" style={{ height: '0.5px', background: 'var(--ios-sep)' }} />
-          <span className="ios-caption1">or</span>
+          <span className="ios-caption1">or continue with</span>
           <div className="flex-1" style={{ height: '0.5px', background: 'var(--ios-sep)' }} />
         </div>
 
         {/* Google sign-in */}
         <button
-          className="ios-btn w-full"
+          className="ios-btn w-full ios-shadow-xs"
           style={{
             height: 50,
             borderRadius: 14,
@@ -92,6 +93,7 @@ export default function SignInPage() {
             background: 'var(--ios-grouped-bg2)',
             color: 'var(--ios-label)',
             border: '0.5px solid var(--ios-sep)',
+            fontWeight: 500,
           }}
         >
           <svg className="w-5 h-5 mr-2 flex-shrink-0" viewBox="0 0 24 24">
@@ -105,8 +107,8 @@ export default function SignInPage() {
 
         {/* Sign up link */}
         <p className="ios-subhead text-center mt-8" style={{ color: 'var(--ios-label2)' }}>
-          Don't have an account?{' '}
-          <Link href="/sign-up" className="ios-btn-text" style={{ fontSize: 15 }}>
+          Don&rsquo;t have an account?{' '}
+          <Link href="/sign-up" className="ios-btn-text" style={{ fontSize: 15, fontWeight: 600 }}>
             Sign Up
           </Link>
         </p>

@@ -14,35 +14,34 @@ export default function SignUpPage() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-4 py-8"
-      style={{ background: 'var(--ios-grouped-bg)', paddingTop: 'calc(var(--ios-nav) + 20px)' }}
+      className="min-h-screen flex flex-col items-center px-4 py-8 ios-hero-bg"
+      style={{ paddingTop: 'calc(var(--ios-nav) + 16px)', paddingBottom: 40 }}
     >
       <div className="w-full max-w-[400px]">
 
         {/* Header */}
         <div className="text-center mb-8">
           <div
-            className="w-16 h-16 rounded-[18px] flex items-center justify-center mx-auto mb-4"
-            style={{ background: 'var(--ios-blue)' }}
+            className="w-[68px] h-[68px] rounded-[20px] flex items-center justify-center mx-auto mb-4 ios-gradient-blue ios-shadow-blue"
           >
             <svg viewBox="0 0 20 20" fill="white" className="w-9 h-9">
               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h3a1 1 0 001-1v-2a1 1 0 011-1 1 1 0 011 1v2a1 1 0 001 1h3a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
             </svg>
           </div>
-          <h1 className="ios-title1" style={{ fontSize: 26 }}>Create Account</h1>
-          <p className="ios-subhead mt-1" style={{ color: 'var(--ios-label2)' }}>Start renting or listing today</p>
+          <h1 className="ios-title1" style={{ fontSize: 28 }}>Create Account</h1>
+          <p className="ios-subhead mt-1.5" style={{ color: 'var(--ios-label2)' }}>Start renting or listing today</p>
         </div>
 
         {/* Role picker */}
-        <p className="ios-section-header">I am a</p>
-        <div className="px-0 mb-2">
+        <p className="ios-section-header" style={{ paddingLeft: 0, paddingRight: 0 }}>I am a</p>
+        <div className="mb-4">
           <div className="ios-segmented w-full" style={{ display: 'flex' }}>
             {(['renter', 'landlord'] as const).map((r) => (
               <button
                 key={r}
                 onClick={() => setRole(r)}
                 className={`ios-seg-item flex-1 capitalize ${role === r ? 'ios-seg-item-active' : ''}`}
-                style={{ fontSize: 15, height: 34 }}
+                style={{ fontSize: 15, height: 36 }}
               >
                 {r === 'renter' ? '🔍 Renter' : '🏠 Landlord'}
               </button>
@@ -51,8 +50,8 @@ export default function SignUpPage() {
         </div>
 
         {/* Name fields */}
-        <p className="ios-section-header mt-2">Name</p>
-        <div className="ios-input-group">
+        <p className="ios-section-header" style={{ paddingLeft: 0, paddingRight: 0 }}>Name</p>
+        <div className="ios-input-group ios-shadow-xs mb-4">
           <div className="ios-input-row">
             <span className="ios-input-label" style={{ minWidth: 90 }}>First name</span>
             <input
@@ -78,8 +77,8 @@ export default function SignUpPage() {
         </div>
 
         {/* Email + Password */}
-        <p className="ios-section-header mt-2">Credentials</p>
-        <div className="ios-input-group">
+        <p className="ios-section-header" style={{ paddingLeft: 0, paddingRight: 0 }}>Credentials</p>
+        <div className="ios-input-group ios-shadow-xs mb-4">
           <div className="ios-input-row">
             <span className="ios-input-label">Email</span>
             <input
@@ -105,7 +104,7 @@ export default function SignUpPage() {
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="flex-shrink-0 ios-btn-text"
-              style={{ fontSize: 14, minWidth: 0 }}
+              style={{ fontSize: 14, minWidth: 0, fontWeight: 500 }}
             >
               {showPassword ? 'Hide' : 'Show'}
             </button>
@@ -114,8 +113,11 @@ export default function SignUpPage() {
 
         {/* Terms */}
         <div
-          className="flex items-start gap-3 mx-0 mt-4 mb-6 p-4 rounded-[14px]"
-          style={{ background: 'var(--ios-grouped-bg2)' }}
+          className="flex items-start gap-3 mt-2 mb-6 p-4 rounded-[14px] ios-shadow-xs"
+          style={{
+            background: 'var(--ios-grouped-bg2)',
+            border: '0.5px solid var(--ios-sep)',
+          }}
         >
           <label className="ios-toggle mt-0.5 flex-shrink-0" style={{ width: 40, height: 24 }}>
             <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} />
@@ -139,16 +141,16 @@ export default function SignUpPage() {
           </label>
           <p className="ios-subhead leading-snug" style={{ fontSize: 14, color: 'var(--ios-label2)' }}>
             I agree to the{' '}
-            <span className="ios-btn-text" style={{ fontSize: 14 }}>Terms of Service</span>
+            <span className="ios-btn-text" style={{ fontSize: 14, fontWeight: 500 }}>Terms of Service</span>
             {' '}and{' '}
-            <span className="ios-btn-text" style={{ fontSize: 14 }}>Privacy Policy</span>
+            <span className="ios-btn-text" style={{ fontSize: 14, fontWeight: 500 }}>Privacy Policy</span>
           </p>
         </div>
 
         {/* Create Account button */}
         <button
-          className="ios-btn ios-btn-blue w-full mb-4"
-          style={{ height: 50, borderRadius: 14, fontSize: 17, opacity: terms ? 1 : 0.5 }}
+          className="ios-btn ios-btn-blue ios-gradient-blue ios-shadow-blue w-full mb-4"
+          style={{ height: 50, borderRadius: 14, fontSize: 17, fontWeight: 600, opacity: terms ? 1 : 0.45, transition: 'opacity 0.2s ease' }}
           disabled={!terms}
         >
           Create Account
@@ -157,13 +159,13 @@ export default function SignUpPage() {
         {/* Divider */}
         <div className="flex items-center gap-3 mb-4">
           <div className="flex-1" style={{ height: '0.5px', background: 'var(--ios-sep)' }} />
-          <span className="ios-caption1">or</span>
+          <span className="ios-caption1">or continue with</span>
           <div className="flex-1" style={{ height: '0.5px', background: 'var(--ios-sep)' }} />
         </div>
 
         {/* Google */}
         <button
-          className="ios-btn w-full mb-8"
+          className="ios-btn w-full ios-shadow-xs mb-8"
           style={{
             height: 50,
             borderRadius: 14,
@@ -171,6 +173,7 @@ export default function SignUpPage() {
             background: 'var(--ios-grouped-bg2)',
             color: 'var(--ios-label)',
             border: '0.5px solid var(--ios-sep)',
+            fontWeight: 500,
           }}
         >
           <svg className="w-5 h-5 mr-2 flex-shrink-0" viewBox="0 0 24 24">
@@ -184,7 +187,7 @@ export default function SignUpPage() {
 
         <p className="ios-subhead text-center" style={{ color: 'var(--ios-label2)' }}>
           Already have an account?{' '}
-          <Link href="/sign-in" className="ios-btn-text" style={{ fontSize: 15 }}>Sign In</Link>
+          <Link href="/sign-in" className="ios-btn-text" style={{ fontSize: 15, fontWeight: 600 }}>Sign In</Link>
         </p>
 
       </div>

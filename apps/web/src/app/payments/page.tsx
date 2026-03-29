@@ -12,78 +12,160 @@ const mockPayments = [
   { id: '5', property: 'Modern Downtown Loft', amount: 2400, type: 'rent', status: 'pending', date: '2026-04-01', method: 'Auto-pay' },
 ];
 
-const statusStyles: Record<string, string> = {
-  completed: 'bg-emerald-50 text-emerald-700',
-  pending: 'bg-amber-50 text-amber-700',
-  failed: 'bg-red-50 text-red-700',
-};
+const typeIcon: Record<string, string> = { rent: '🏠', deposit: '🏦' };
 
 export default function PaymentsPage() {
   const [filter, setFilter] = useState<'all' | 'rent' | 'deposit'>('all');
   const filtered = filter === 'all' ? mockPayments : mockPayments.filter((p) => p.type === filter);
 
+  const totalPaid = mockPayments.filter(p => p.status === 'completed').reduce((s, p) => s + p.amount, 0);
+  const upcoming = mockPayments.filter(p => p.status === 'pending').reduce((s, p) => s + p.amount, 0);
+  const deposit = mockPayments.filter(p => p.type === 'deposit').reduce((s, p) => s + p.amount, 0);
+
   return (
-    <div className="max-w-4xl mx-auto px-6 py-20 pt-28">
-      <h1 className="rc-section-title">Payments</h1>
-      <p className="text-sm mt-1" style={{ color: 'var(--rc-muted)' }}>Track rent payments and deposits</p>
+    <div className="ios-page">
+      <div style={{ paddingTop: 60 }}>
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-3 gap-4 mt-8">
-        <div className="rc-card-static p-5">
-          <p className="text-xs font-medium" style={{ color: 'var(--rc-muted)' }}>Total Paid</p>
-          <p className="text-2xl font-bold mt-1" style={{ color: 'var(--rc-text)' }}>{formatCurrency(7200)}</p>
+        {/* Header */}
+        <div className="ios-large-title-area">
+          <p className="ios-caption1 mb-0.5" style={{ color: 'var(--ios-blue)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Payments
+          </p>
+          <h1 className="ios-large-title">Rent Payments</h1>
+          <p className="ios-subhead mt-1">Track your rent and deposits</p>
         </div>
-        <div className="rc-card-static p-5">
-          <p className="text-xs font-medium" style={{ color: 'var(--rc-muted)' }}>Upcoming</p>
-          <p className="text-2xl font-bold mt-1" style={{ color: 'var(--rc-primary)' }}>{formatCurrency(2400)}</p>
-        </div>
-        <div className="rc-card-static p-5">
-          <p className="text-xs font-medium" style={{ color: 'var(--rc-muted)' }}>Deposit Held</p>
-          <p className="text-2xl font-bold mt-1" style={{ color: 'var(--rc-text)' }}>{formatCurrency(2400)}</p>
-        </div>
-      </div>
 
-      {/* Filter tabs */}
-      <div className="flex gap-2 mt-8">
-        {(['all', 'rent', 'deposit'] as const).map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`rc-badge transition-all duration-200 ${filter === f ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+        {/* Summary cards */}
+        <div className="ios-scroll-x py-2" style={{ gap: 10, paddingBottom: 8 }}>
+          <div className="ios-stat-card ios-gradient-card-green" style={{ minWidth: 130 }}>
+            <div className="w-9 h-9 rounded-[10px] flex items-center justify-center text-lg mb-2" style={{ background: 'rgba(52,199,89,0.15)' }}>
+              ✅
+            </div>
+            <p className="ios-stat-value" style={{ color: 'var(--ios-green)' }}>{formatCurrency(totalPaid)}</p>
+            <p className="ios-stat-label">Total Paid</p>
+          </div>
+          <div className="ios-stat-card ios-gradient-card-blue" style={{ minWidth: 130 }}>
+            <div className="w-9 h-9 rounded-[10px] flex items-center justify-center text-lg mb-2" style={{ background: 'rgba(0,122,255,0.12)' }}>
+              📅
+            </div>
+            <p className="ios-stat-value" style={{ color: 'var(--ios-blue)' }}>{formatCurrency(upcoming)}</p>
+            <p className="ios-stat-label">Upcoming</p>
+          </div>
+          <div className="ios-stat-card" style={{ minWidth: 130 }}>
+            <div className="w-9 h-9 rounded-[10px] flex items-center justify-center text-lg mb-2" style={{ background: 'var(--ios-fill3)' }}>
+              🏦
+            </div>
+            <p className="ios-stat-value">{formatCurrency(deposit)}</p>
+            <p className="ios-stat-label">Deposit Held</p>
+          </div>
+        </div>
+
+        {/* Auto-pay banner */}
+        <div className="mx-4 mb-4">
+          <div
+            className="flex items-center justify-between p-4 rounded-[14px]"
+            style={{
+              background: 'linear-gradient(135deg, rgba(52,199,89,0.08) 0%, rgba(0,122,255,0.06) 100%)',
+              border: '0.5px solid rgba(52,199,89,0.20)',
+            }}
           >
-            {f.charAt(0).toUpperCase() + f.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      {/* Payment list */}
-      <div className="mt-6 space-y-3">
-        {filtered.map((p) => (
-          <div key={p.id} className="rc-card-static p-4 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                <span className="text-lg">{p.type === 'rent' ? '🏠' : '🏦'}</span>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-[10px] flex items-center justify-center text-lg" style={{ background: 'rgba(52,199,89,0.15)' }}>
+                💳
               </div>
               <div>
-                <p className="text-sm font-semibold" style={{ color: 'var(--rc-text)' }}>{p.property}</p>
-                <p className="text-xs mt-0.5" style={{ color: 'var(--rc-muted)' }}>{new Date(p.date).toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric' })} · {p.method}</p>
+                <p className="ios-headline" style={{ fontSize: 14, color: 'var(--ios-green)' }}>Auto-pay is active</p>
+                <p className="ios-caption1 mt-0.5">Rent paid automatically on the 1st</p>
               </div>
             </div>
-            <div className="text-right">
-              <p className="text-sm font-bold" style={{ color: 'var(--rc-text)' }}>{formatCurrency(p.amount)}</p>
-              <span className={`rc-badge text-[10px] mt-1 ${statusStyles[p.status]}`}>{p.status}</span>
-            </div>
+            <Link
+              href="/profile/settings"
+              className="ios-btn-text"
+              style={{ fontSize: 14, fontWeight: 500 }}
+            >
+              Manage
+            </Link>
           </div>
-        ))}
-      </div>
-
-      {/* Auto-pay CTA */}
-      <div className="rc-card-static p-6 mt-8 flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #EFF6FF 0%, #F0FDF4 100%)' }}>
-        <div>
-          <p className="font-semibold text-sm" style={{ color: 'var(--rc-text)' }}>💳 Auto-pay is active</p>
-          <p className="text-xs mt-1" style={{ color: 'var(--rc-muted)' }}>Rent is automatically paid on the 1st of each month</p>
         </div>
-        <Link href="/profile/settings" className="rc-btn-secondary text-xs px-4 py-2">Manage</Link>
+
+        {/* Filter tabs */}
+        <div className="px-4 mb-2">
+          <div className="ios-segmented w-full" style={{ display: 'flex' }}>
+            {(['all', 'rent', 'deposit'] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`ios-seg-item flex-1 capitalize ${filter === f ? 'ios-seg-item-active' : ''}`}
+                style={{ fontSize: 14, height: 32 }}
+              >
+                {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Payment list */}
+        <p className="ios-section-header">Transaction History</p>
+        <div className="ios-group">
+          {filtered.map((p) => (
+            <div
+              key={p.id}
+              className="ios-row"
+              style={{ minHeight: 64, alignItems: 'flex-start', paddingTop: 12, paddingBottom: 12, cursor: 'default' }}
+            >
+              <div
+                className="ios-row-icon flex-shrink-0"
+                style={{
+                  background: p.status === 'pending'
+                    ? 'rgba(255,149,0,0.12)'
+                    : 'rgba(52,199,89,0.12)',
+                  marginTop: 1,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 9,
+                }}
+              >
+                <span style={{ fontSize: 16 }}>{typeIcon[p.type]}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="ios-headline" style={{ fontSize: 14 }}>{p.property}</p>
+                <p className="ios-caption1 mt-0.5" style={{ color: 'var(--ios-label2)' }}>
+                  {new Date(p.date).toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  {' · '}{p.method}
+                </p>
+                <span
+                  className={`ios-status mt-1.5 ${p.status === 'completed' ? 'ios-status-completed' : 'ios-status-pending'}`}
+                  style={{ display: 'inline-flex' }}
+                >
+                  <span className="ios-status-dot" />
+                  {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
+                </span>
+              </div>
+              <div className="text-right flex-shrink-0 ml-2">
+                <p
+                  className="ios-headline"
+                  style={{ fontSize: 16, fontWeight: 700, color: p.status === 'pending' ? 'var(--ios-orange)' : 'var(--ios-label)' }}
+                >
+                  {formatCurrency(p.amount)}
+                </p>
+                <p className="ios-caption2 mt-0.5 capitalize" style={{ color: 'var(--ios-label3)' }}>{p.type}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Pay now button (if upcoming) */}
+        {upcoming > 0 && (
+          <div className="px-4 mt-2 mb-6">
+            <button
+              className="ios-btn ios-btn-blue ios-gradient-blue ios-shadow-blue w-full"
+              style={{ height: 50, borderRadius: 14, fontSize: 17, fontWeight: 600 }}
+            >
+              Pay {formatCurrency(upcoming)} Now
+            </button>
+          </div>
+        )}
+
       </div>
     </div>
   );
