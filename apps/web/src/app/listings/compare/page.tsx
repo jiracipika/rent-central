@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
@@ -58,7 +59,7 @@ function ComparisonRow({ label, values, highlight }: { label: string; values: Re
   );
 }
 
-export default function ComparePage() {
+function CompareContent() {
   const searchParams = useSearchParams();
   const ids = searchParams.get('ids')?.split(',').filter(Boolean) || [];
 
@@ -204,5 +205,13 @@ export default function ComparePage() {
 
       </div>
     </div>
+  );
+}
+
+export default function ComparePage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: 'var(--ios-grouped-bg)' }} />}>
+      <CompareContent />
+    </Suspense>
   );
 }

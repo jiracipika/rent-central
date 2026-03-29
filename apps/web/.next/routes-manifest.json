@@ -144,6 +144,12 @@
       "namedRegex": "^/dashboard(?:/)?$"
     },
     {
+      "page": "/icon.svg",
+      "regex": "^/icon\\.svg(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/icon\\.svg(?:/)?$"
+    },
+    {
       "page": "/landlord",
       "regex": "^/landlord(?:/)?$",
       "routeKeys": {},
@@ -154,6 +160,12 @@
       "regex": "^/landlord/applications(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/landlord/applications(?:/)?$"
+    },
+    {
+      "page": "/landlord/create-listing",
+      "regex": "^/landlord/create\\-listing(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/landlord/create\\-listing(?:/)?$"
     },
     {
       "page": "/landlord/listings",
@@ -172,6 +184,12 @@
       "regex": "^/listings(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/listings(?:/)?$"
+    },
+    {
+      "page": "/listings/compare",
+      "regex": "^/listings/compare(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/listings/compare(?:/)?$"
     },
     {
       "page": "/messages",
