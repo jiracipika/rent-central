@@ -104,10 +104,10 @@ export default function ProfilePage() {
                     <span style={{ fontSize: 15 }}>{item.icon}</span>
                   </div>
                   <span className="ios-row-label" style={{ fontSize: 15 }}>{item.label}</span>
-                  {item.value && (
+                  {'value' in item && item.value && (
                     <span className="ios-row-value" style={{ fontSize: 14 }}>{item.value}</span>
                   )}
-                  {item.badge && (
+                  {'badge' in item && item.badge && (
                     <span className="ios-badge" style={{ fontSize: 11, minWidth: 18, height: 18 }}>{item.badge}</span>
                   )}
                   <span className="ios-chevron">›</span>
