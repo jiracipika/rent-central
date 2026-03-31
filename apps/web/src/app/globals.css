@@ -55,6 +55,14 @@
     --ios-glass-bg:     rgba(242,242,247,0.72);
     --ios-glass-dark:   rgba(28,28,30,0.72);
 
+    /* ── Shadows (light) ── */
+    --ios-shadow-xs:  0 1px 2px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(0,0,0,0.03);
+    --ios-shadow-sm:  0 1px 4px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.03);
+    --ios-shadow:     0 2px 8px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.03);
+    --ios-shadow-md:  0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+    --ios-shadow-lg:  0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+    --ios-shadow-blue: 0 4px 20px rgba(0,122,255,0.22), 0 1px 4px rgba(0,122,255,0.12);
+
     /* ── Aliases for legacy rc-* classes ── */
     --rc-primary:     var(--ios-blue);
     --rc-green:       var(--ios-green);
@@ -94,6 +102,13 @@
       --ios-sep-opaque: #38383A;
 
       --ios-glass-bg:   rgba(28,28,30,0.82);
+
+      --ios-shadow-xs:  0 1px 2px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(255,255,255,0.04);
+      --ios-shadow-sm:  0 1px 4px rgba(0,0,0,0.4), 0 0 0 0.5px rgba(255,255,255,0.04);
+      --ios-shadow:     0 2px 8px rgba(0,0,0,0.45), 0 0 0 0.5px rgba(255,255,255,0.04);
+      --ios-shadow-md:  0 4px 16px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3);
+      --ios-shadow-lg:  0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35);
+      --ios-shadow-blue: 0 4px 20px rgba(10,132,255,0.3), 0 1px 4px rgba(10,132,255,0.18);
 
       --rc-text:     var(--ios-label);
       --rc-text2:    var(--ios-label2);
@@ -864,27 +879,15 @@
 }
 
 /* ═══════════════════════════════════════════════
-   ENHANCED SHADOWS
+   ENHANCED SHADOWS (using CSS custom properties)
 ═══════════════════════════════════════════════ */
 @layer components {
-  .ios-shadow-xs {
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(0,0,0,0.04);
-  }
-  .ios-shadow-sm {
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
-  }
-  .ios-shadow {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.04);
-  }
-  .ios-shadow-md {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
-  }
-  .ios-shadow-lg {
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
-  }
-  .ios-shadow-blue {
-    box-shadow: 0 4px 20px rgba(0,122,255,0.25), 0 1px 4px rgba(0,122,255,0.15);
-  }
+  .ios-shadow-xs  { box-shadow: var(--ios-shadow-xs); }
+  .ios-shadow-sm  { box-shadow: var(--ios-shadow-sm); }
+  .ios-shadow     { box-shadow: var(--ios-shadow); }
+  .ios-shadow-md  { box-shadow: var(--ios-shadow-md); }
+  .ios-shadow-lg  { box-shadow: var(--ios-shadow-lg); }
+  .ios-shadow-blue{ box-shadow: var(--ios-shadow-blue); }
 }
 
 /* ═══════════════════════════════════════════════
@@ -1149,4 +1152,218 @@
 
 .animate-ios-fade-in {
   animation: ios-fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ═══════════════════════════════════════════════
+   ENTRANCE ANIMATIONS (CSS-only, no JS needed)
+═══════════════════════════════════════════════ */
+@keyframes rc-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rc-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes rc-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rc-slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.animate-rc-fade-up {
+  animation: rc-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-rc-fade-in {
+  animation: rc-fade-in 0.4s ease-out forwards;
+}
+
+.animate-rc-scale-in {
+  animation: rc-scale-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Staggered entrance helpers */
+.animate-stagger > *:nth-child(1) { animation-delay: 0s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.04s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.08s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.12s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.16s; }
+.animate-stagger > *:nth-child(6) { animation-delay: 0.20s; }
+.animate-stagger > *:nth-child(7) { animation-delay: 0.24s; }
+.animate-stagger > *:nth-child(8) { animation-delay: 0.28s; }
+
+.animate-stagger > * {
+  opacity: 0;
+  animation: rc-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ═══════════════════════════════════════════════
+   ENHANCED HOVER STATES (desktop)
+═══════════════════════════════════════════════ */
+@media (hover: hover) {
+  .ios-btn:hover {
+    filter: brightness(1.08);
+  }
+
+  .ios-btn-blue:hover {
+    filter: brightness(1.1);
+  }
+
+  .ios-btn-bordered:hover {
+    background: rgba(0,122,255,0.06);
+  }
+
+  .ios-card:hover {
+    box-shadow: var(--ios-shadow);
+  }
+
+  .ios-listing-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ios-shadow-md);
+  }
+
+  .ios-listing-card:active {
+    transform: scale(0.98) translateY(0);
+    box-shadow: none;
+  }
+
+  .ios-row:hover {
+    background: var(--ios-fill4);
+  }
+
+  .ios-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ios-shadow-md);
+  }
+
+  .ios-input-standalone:hover {
+    background: var(--ios-fill3);
+  }
+
+  .ios-heart-btn:hover {
+    transform: scale(1.1);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   DESKTOP SCROLLBAR
+═══════════════════════════════════════════════ */
+@media (hover: hover) and (pointer: fine) {
+  ::-webkit-scrollbar {
+    display: block;
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.15);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.25);
+  }
+  @media (prefers-color-scheme: dark) {
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.12);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.22);
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   SMOOTH FOCUS RING
+═══════════════════════════════════════════════ */
+:focus-visible {
+  outline: 2px solid var(--ios-blue);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ═══════════════════════════════════════════════
+   GRADIENT ACCENT BACKGROUNDS
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-bg-gradient-blue {
+    background: linear-gradient(135deg, rgba(0,122,255,0.06) 0%, rgba(0,122,255,0.02) 100%);
+  }
+  .ios-bg-gradient-green {
+    background: linear-gradient(135deg, rgba(52,199,89,0.06) 0%, rgba(52,199,89,0.02) 100%);
+  }
+  .ios-bg-gradient-purple {
+    background: linear-gradient(135deg, rgba(175,82,222,0.06) 0%, rgba(175,82,222,0.02) 100%);
+  }
+  .ios-bg-gradient-orange {
+    background: linear-gradient(135deg, rgba(255,149,0,0.06) 0%, rgba(255,149,0,0.02) 100%);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   MOBILE MENU SLIDE-DOWN ANIMATION
+═══════════════════════════════════════════════ */
+@keyframes rc-menu-slide {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-rc-menu {
+  animation: rc-menu-slide 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ═══════════════════════════════════════════════
+   OVERLAY BACKDROP (frosted glass)
+═══════════════════════════════════════════════ */
+@keyframes rc-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.ios-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  animation: rc-overlay-in 0.25s ease-out forwards;
+}
+
+.ios-overlay-center {
+  align-items: center;
+}
+
+/* ═══════════════════════════════════════════════
+   ENHANCED BODY TRANSITIONS
+═══════════════════════════════════════════════ */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ═══════════════════════════════════════════════
+   GLASS CARD REFINEMENT
+═══════════════════════════════════════════════ */
+@layer components {
+  .ios-glass {
+    background: var(--ios-glass-bg);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+  .ios-glass-heavy {
+    background: var(--ios-glass-bg);
+    backdrop-filter: saturate(200%) blur(40px);
+    -webkit-backdrop-filter: saturate(200%) blur(40px);
+  }
 }

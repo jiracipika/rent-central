@@ -88,7 +88,7 @@ export default function Home() {
     <div className="ios-page ios-hero-bg">
 
       {/* ── Hero ── */}
-      <section style={{ paddingTop: 60 }}>
+      <section className="animate-rc-fade-up" style={{ paddingTop: 60 }}>
         <div className="px-4 pt-12 pb-8 max-w-[640px] mx-auto text-center">
           <div
             className="inline-flex items-center gap-1.5 mb-4 px-3 py-1.5 rounded-full"
@@ -176,7 +176,7 @@ export default function Home() {
       </section>
 
       {/* ── Featured Listings Carousel ── */}
-      <section className="mb-6">
+      <section className="mb-6 animate-rc-fade-up" style={{ animationDelay: '0.1s' }}>
         <div className="flex items-center justify-between px-4 pb-3">
           <h2 className="ios-title3">Featured Listings</h2>
           <Link href="/listings" className="ios-btn-text" style={{ fontSize: 15 }}>See All</Link>
@@ -237,7 +237,7 @@ export default function Home() {
       </section>
 
       {/* ── Browse by City ── */}
-      <section className="mb-6">
+      <section className="mb-6 animate-rc-fade-up" style={{ animationDelay: '0.18s' }}>
         <p className="ios-section-header">Browse by City</p>
         <div className="ios-group ios-shadow-xs">
           {cities.map((city) => (
@@ -252,7 +252,7 @@ export default function Home() {
       </section>
 
       {/* ── How It Works ── */}
-      <section className="mb-6">
+      <section className="mb-6 animate-rc-fade-up" style={{ animationDelay: '0.24s' }}>
         <p className="ios-section-header">How Rent Central Works</p>
         <div className="ios-scroll-x" style={{ gap: 10, paddingBottom: 8 }}>
           {features.map((f, i) => (
@@ -277,7 +277,7 @@ export default function Home() {
       </section>
 
       {/* ── Landlord CTA ── */}
-      <section className="mb-6 px-4">
+      <section className="mb-6 px-4 animate-rc-fade-up" style={{ animationDelay: '0.3s' }}>
         <div className="ios-cta-banner ios-cta-banner-blue ios-shadow-blue">
           {/* Subtle background pattern */}
           <div
@@ -320,7 +320,7 @@ export default function Home() {
       </section>
 
       {/* ── Sign Up CTA ── */}
-      <section className="mb-10 px-4">
+      <section className="mb-10 px-4 animate-rc-fade-up" style={{ animationDelay: '0.36s' }}>
         <div
           className="ios-shadow-sm"
           style={{

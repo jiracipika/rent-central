@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function Footer() {
   return (
     <footer style={{ borderTop: '0.5px solid var(--ios-sep)', background: 'var(--ios-grouped-bg2)' }}>
-      <div className="max-w-[980px] mx-auto px-4 py-10">
+      <div className="max-w-[980px] mx-auto px-4 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-3">

@@ -146,7 +146,7 @@ export default function NavBar() {
           onClick={() => setMenuOpen(false)}
         >
           <div
-            className="absolute top-[var(--ios-nav)] left-0 right-0 glass-card ios-shadow-md"
+            className="absolute top-[var(--ios-nav)] left-0 right-0 glass-card ios-shadow-md animate-rc-menu"
             style={{ borderBottom: '0.5px solid var(--ios-sep)' }}
             onClick={(e) => e.stopPropagation()}
           >
