@@ -1,80 +1,24 @@
 'use client';
 
 import Link from 'next/link';
-import type { Property } from '@rent-central/core';
+import { listings, popularCities } from '@/data/listings';
 import { formatCurrency } from '@rent-central/core';
 
-const mockListings: Property[] = [
-  {
-    id: '1', landlordId: 'l1', title: 'Modern Downtown Apartment', description: 'Beautiful 2-bed near transit.',
-    type: 'apartment', status: 'active', address: '123 King St W', city: 'Toronto', province: 'ON',
-    postalCode: 'M5H 1A1', lat: 43.6487, lng: -79.3854, bedrooms: 2, bathrooms: 1,
-    pricePerTerm: { 3: 3600, 6: 3450, 12: 3300 }, deposit: 1650, utilitiesIncluded: false,
-    parkingIncluded: true, petFriendly: true, furnished: false, amenities: ['Gym', 'Rooftop'],
-    photos: [], coverPhoto: '', availableFrom: new Date('2026-04-01'), minimumLeaseTerm: 12,
-    createdAt: new Date(), isNew: true,
-  },
-  {
-    id: '2', landlordId: 'l2', title: 'Cozy Plateau Studio', description: 'Charming studio in the Plateau.',
-    type: 'studio', status: 'active', address: '456 St-Denis', city: 'Montréal', province: 'QC',
-    postalCode: 'H2J 2W5', lat: 45.5225, lng: -73.5848, bedrooms: 0, bathrooms: 1,
-    pricePerTerm: { 3: 2700, 6: 2550, 12: 2400 }, deposit: 1200, utilitiesIncluded: true,
-    parkingIncluded: false, petFriendly: false, furnished: true, amenities: ['Laundry'],
-    photos: [], coverPhoto: '', availableFrom: new Date('2026-05-01'), minimumLeaseTerm: 6,
-    createdAt: new Date(), isNew: true,
-  },
-  {
-    id: '3', landlordId: 'l3', title: 'Spacious Family Home', description: '3-bed house with yard.',
-    type: 'house', status: 'active', address: '789 Oak Ave', city: 'Vancouver', province: 'BC',
-    postalCode: 'V6B 1A1', lat: 49.2827, lng: -123.1207, bedrooms: 3, bathrooms: 2,
-    pricePerTerm: { 3: 5400, 6: 5100, 12: 4800 }, deposit: 2400, utilitiesIncluded: false,
-    parkingIncluded: true, petFriendly: true, furnished: false, amenities: ['Garden', 'Garage'],
-    photos: [], coverPhoto: '', availableFrom: new Date('2026-04-15'), minimumLeaseTerm: 12,
-    createdAt: new Date(), isNew: false,
-  },
-  {
-    id: '4', landlordId: 'l4', title: 'Bright Yaletown Condo', description: 'Modern condo with views.',
-    type: 'condo', status: 'active', address: '101 Homer St', city: 'Vancouver', province: 'BC',
-    postalCode: 'V6B 2W9', lat: 49.2799, lng: -123.1244, bedrooms: 1, bathrooms: 1,
-    pricePerTerm: { 3: 3300, 6: 3150, 12: 3000 }, deposit: 1500, utilitiesIncluded: true,
-    parkingIncluded: true, petFriendly: false, furnished: true, amenities: ['Pool', 'Gym'],
-    photos: [], coverPhoto: '', availableFrom: new Date('2026-05-01'), minimumLeaseTerm: 6,
-    createdAt: new Date(), isNew: true,
-  },
-  {
-    id: '5', landlordId: 'l5', title: 'Basement Suite in Bridgeland', description: 'Affordable suite near downtown.',
-    type: 'basement', status: 'active', address: '222 1 St NE', city: 'Calgary', province: 'AB',
-    postalCode: 'T2E 1A1', lat: 51.0534, lng: -114.0626, bedrooms: 1, bathrooms: 1,
-    pricePerTerm: { 3: 2100, 6: 1950, 12: 1800 }, deposit: 900, utilitiesIncluded: true,
-    parkingIncluded: false, petFriendly: true, furnished: false, amenities: ['Laundry'],
-    photos: [], coverPhoto: '', availableFrom: new Date('2026-04-01'), minimumLeaseTerm: 3,
-    createdAt: new Date(), isNew: true,
-  },
-  {
-    id: '6', landlordId: 'l6', title: 'South End Townhouse', description: 'Great townhouse for families.',
-    type: 'townhouse', status: 'active', address: '55 Quinpool Rd', city: 'Halifax', province: 'NS',
-    postalCode: 'B3J 1A1', lat: 44.6488, lng: -63.5752, bedrooms: 3, bathrooms: 2,
-    pricePerTerm: { 3: 3300, 6: 3150, 12: 3000 }, deposit: 1500, utilitiesIncluded: false,
-    parkingIncluded: true, petFriendly: true, furnished: false, amenities: ['Driveway', 'Storage'],
-    photos: [], coverPhoto: '', availableFrom: new Date('2026-06-01'), minimumLeaseTerm: 12,
-    createdAt: new Date(), isNew: false,
-  },
+const galleryGradients = [
+  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+  'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+  'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+  'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+  'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
 ];
 
-const cities = [
-  { name: 'Toronto',   icon: '🏙️', count: '2,400+' },
-  { name: 'Vancouver', icon: '🌉', count: '1,800+' },
-  { name: 'Montréal',  icon: '⛪', count: '1,500+' },
-  { name: 'Calgary',   icon: '🌾', count: '900+' },
-  { name: 'Ottawa',    icon: '🏛️', count: '750+' },
-  { name: 'Halifax',   icon: '⚓', count: '420+' },
-];
+const featuredListings = listings.filter((l) => l.isNew).slice(0, 6);
 
-const features = [
-  { icon: '🔍', color: '#007AFF', label: 'Search',   desc: 'Thousands of verified listings' },
-  { icon: '📝', color: '#34C759', label: 'Apply',    desc: 'One-tap rental applications' },
-  { icon: '💳', color: '#FF9500', label: 'Pay',      desc: 'Secure Stripe payments' },
-  { icon: '✍️', color: '#AF52DE', label: 'Sign',     desc: 'Digital lease contracts' },
+const steps = [
+  { icon: '🔍', color: '#007AFF', label: 'Search', desc: 'Browse thousands of verified listings across Canada' },
+  { icon: '🏠', color: '#34C759', label: 'Tour', desc: 'Schedule viewings and explore your future home' },
+  { icon: '✍️', color: '#AF52DE', label: 'Apply', desc: 'One-tap applications with digital contracts' },
 ];
 
 const trustStats = [
@@ -140,7 +84,7 @@ export default function Home() {
             />
             <Link
               href="/listings"
-              className="ios-btn ios-btn-blue flex-shrink-0 ios-gradient-blue"
+              className="ios-btn ios-btn-blue ios-gradient-blue"
               style={{ height: 42, borderRadius: 13, padding: '0 22px', fontSize: 15, fontWeight: 600 }}
             >
               Search
@@ -161,14 +105,9 @@ export default function Home() {
 
         {/* Trust stats */}
         <div className="flex items-center justify-center gap-8 pb-8 px-4">
-          {trustStats.map((s, i) => (
+          {trustStats.map((s) => (
             <div key={s.label} className="text-center">
-              <p
-                className="ios-title2"
-                style={{ fontSize: 22, color: 'var(--ios-label)' }}
-              >
-                {s.value}
-              </p>
+              <p className="ios-title2" style={{ fontSize: 22, color: 'var(--ios-label)' }}>{s.value}</p>
               <p className="ios-caption1 mt-0.5">{s.label}</p>
             </div>
           ))}
@@ -182,7 +121,7 @@ export default function Home() {
           <Link href="/listings" className="ios-btn-text" style={{ fontSize: 15 }}>See All</Link>
         </div>
         <div className="ios-scroll-x" style={{ paddingBottom: 8 }}>
-          {mockListings.map((listing) => (
+          {featuredListings.map((listing) => (
             <Link
               key={listing.id}
               href={`/listings/${listing.id}`}
@@ -190,12 +129,11 @@ export default function Home() {
               style={{ width: 268 }}
             >
               <div className="ios-listing-image" style={{ height: 178, aspectRatio: 'unset' }}>
-                {/* Gradient placeholder background */}
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: `linear-gradient(135deg, hsl(${(parseInt(listing.id) * 47) % 360}, 60%, 85%) 0%, hsl(${(parseInt(listing.id) * 47 + 60) % 360}, 50%, 75%) 100%)`,
-                    opacity: 0.35,
+                    background: galleryGradients[parseInt(listing.id) % galleryGradients.length],
+                    opacity: 0.6,
                   }}
                 />
                 <span className="text-4xl" style={{ opacity: 0.25, position: 'relative' }}>🏠</span>
@@ -217,7 +155,7 @@ export default function Home() {
                 <p className="ios-listing-price">{formatCurrency(listing.pricePerTerm[12])}<span>/mo</span></p>
                 <p className="ios-headline mt-0.5 truncate" style={{ fontSize: 15 }}>{listing.title}</p>
                 <p className="ios-caption1 mt-0.5 truncate" style={{ color: 'var(--ios-label2)' }}>
-                  {listing.address}, {listing.city}
+                  {listing.city}, {listing.province}
                 </p>
                 <div className="flex items-center gap-1.5 mt-2.5">
                   <span className="ios-pill ios-pill-gray" style={{ fontSize: 11 }}>
@@ -240,7 +178,7 @@ export default function Home() {
       <section className="mb-6 animate-rc-fade-up" style={{ animationDelay: '0.18s' }}>
         <p className="ios-section-header">Browse by City</p>
         <div className="ios-group ios-shadow-xs">
-          {cities.map((city) => (
+          {popularCities.map((city) => (
             <Link key={city.name} href="/listings" className="ios-row" style={{ minHeight: 52 }}>
               <span className="text-xl" style={{ width: 28, textAlign: 'center' }}>{city.icon}</span>
               <span className="ios-row-label">{city.name}</span>
@@ -255,21 +193,23 @@ export default function Home() {
       <section className="mb-6 animate-rc-fade-up" style={{ animationDelay: '0.24s' }}>
         <p className="ios-section-header">How Rent Central Works</p>
         <div className="ios-scroll-x" style={{ gap: 10, paddingBottom: 8 }}>
-          {features.map((f, i) => (
+          {steps.map((step, i) => (
             <div
-              key={f.label}
+              key={step.label}
               className="ios-card ios-shadow-xs"
-              style={{ width: 164, padding: '20px 16px', flexShrink: 0 }}
+              style={{ width: 180, padding: '20px 16px', flexShrink: 0 }}
             >
               <div
                 className="w-12 h-12 rounded-[14px] flex items-center justify-center text-2xl mb-3"
-                style={{ background: `${f.color}15` }}
+                style={{ background: `${step.color}15` }}
               >
-                {f.icon}
+                {step.icon}
               </div>
-              <p className="ios-headline" style={{ fontSize: 15 }}>{i + 1}. {f.label}</p>
+              <p className="ios-headline" style={{ fontSize: 15 }}>
+                <span style={{ color: 'var(--ios-blue)' }}>{i + 1}.</span> {step.label}
+              </p>
               <p className="ios-caption1 mt-1 leading-snug" style={{ color: 'var(--ios-label2)' }}>
-                {f.desc}
+                {step.desc}
               </p>
             </div>
           ))}
@@ -279,7 +219,6 @@ export default function Home() {
       {/* ── Landlord CTA ── */}
       <section className="mb-6 px-4 animate-rc-fade-up" style={{ animationDelay: '0.3s' }}>
         <div className="ios-cta-banner ios-cta-banner-blue ios-shadow-blue">
-          {/* Subtle background pattern */}
           <div
             style={{
               position: 'absolute', top: -40, right: -40, width: 180, height: 180,

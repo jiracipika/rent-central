@@ -2,7 +2,7 @@
 
 export type UserRole = 'renter' | 'landlord' | 'admin';
 
-export type PropertyType = 'house' | 'apartment' | 'condo' | 'basement' | 'townhouse' | 'studio';
+export type PropertyType = 'house' | 'apartment' | 'condo' | 'basement' | 'townhouse' | 'studio' | 'room';
 export type ListingStatus = 'active' | 'paused' | 'rented' | 'draft';
 export type RentalTerm = 3 | 6 | 12;
 

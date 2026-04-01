@@ -1,46 +1,93 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { listings, propertyTypes } from '@/data/listings';
+import type { PropertyType } from '@rent-central/core';
 
-const mockListings = [
-  { id: '1', title: 'Modern Downtown Loft', address: '123 King St W, Toronto, ON', price: 2400, bedrooms: 2, bathrooms: 1, type: 'condo', sqft: 850, available: '2026-04-15', isNew: true, petFriendly: true, furnished: false, utilities: true },
-  { id: '2', title: 'Spacious Family Home', address: '456 Main St, Vancouver, BC', price: 3200, bedrooms: 4, bathrooms: 3, type: 'house', sqft: 2200, available: '2026-05-01', isNew: false, petFriendly: true, furnished: false, utilities: false },
-  { id: '3', title: 'Cozy Plateau Apartment', address: '789 Rachel E, Montreal, QC', price: 1650, bedrooms: 1, bathrooms: 1, type: 'apartment', sqft: 620, available: '2026-04-01', isNew: true, petFriendly: false, furnished: true, utilities: true },
-  { id: '4', title: 'Luxury Yaletown Condo', address: '101 Homer St, Vancouver, BC', price: 2800, bedrooms: 2, bathrooms: 2, type: 'condo', sqft: 950, available: '2026-04-20', isNew: false, petFriendly: true, furnished: true, utilities: true },
-  { id: '5', title: 'Basement Suite in Bridgeland', address: '222 1 Ave NE, Calgary, AB', price: 1100, bedrooms: 1, bathrooms: 1, type: 'basement', sqft: 550, available: '2026-04-10', isNew: true, petFriendly: false, furnished: false, utilities: true },
-  { id: '6', title: 'Liberty Village Studio', address: '55 East Liberty St, Toronto, ON', price: 1900, bedrooms: 0, bathrooms: 1, type: 'studio', sqft: 480, available: '2026-03-28', isNew: true, petFriendly: false, furnished: true, utilities: true },
-  { id: '7', title: 'Beach-side Townhouse', address: '333 Beach Ave, Vancouver, BC', price: 3500, bedrooms: 3, bathrooms: 2, type: 'townhouse', sqft: 1800, available: '2026-06-01', isNew: false, petFriendly: true, furnished: false, utilities: false },
-  { id: '8', title: 'Plateau Duplex Upper', address: '444 Mont-Royal E, Montreal, QC', price: 2200, bedrooms: 3, bathrooms: 2, type: 'apartment', sqft: 1400, available: '2026-05-15', isNew: false, petFriendly: true, furnished: false, utilities: true },
+const galleryGradients = [
+  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+  'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+  'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+  'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+  'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+  'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)',
+  'linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)',
 ];
 
-const termMultipliers: Record<string, number> = { '3': 1.15, '6': 1.05, '12': 1 };
-const propertyTypes = ['All', 'Apartment', 'Condo', 'House', 'Townhouse', 'Basement', 'Studio'];
+const priceMarks = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000];
+
+type SortOption = 'featured' | 'newest' | 'price_asc' | 'price_desc';
 
 export default function ListingsPage() {
   const [search, setSearch] = useState('');
-  const [term, setTerm] = useState('12');
-  const [sortBy, setSortBy] = useState('newest');
-  const [typeFilter, setTypeFilter] = useState('All');
+  const [term, setTerm] = useState<3 | 6 | 12>(12);
+  const [sortBy, setSortBy] = useState<SortOption>('featured');
+  const [typeFilter, setTypeFilter] = useState<string>('All');
   const [petFilter, setPetFilter] = useState(false);
+  const [utilitiesFilter, setUtilitiesFilter] = useState(false);
+  const [furnishedFilter, setFurnishedFilter] = useState(false);
+  const [bedroomFilter, setBedroomFilter] = useState<number | null>(null);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(5000);
   const [hearts, setHearts] = useState<Set<string>>(new Set());
   const [comparing, setComparing] = useState<Set<string>>(new Set());
+  const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
-  const multiplier = termMultipliers[term];
-  const adjustedPrice = (p: number) => Math.round(p * multiplier);
+  const filtered = useMemo(() => {
+    return listings
+      .filter((l) => {
+        // Price filter
+        const price = l.pricePerTerm[term];
+        if (price < minPrice || price > maxPrice) return false;
 
-  const filtered = mockListings
-    .filter((l) => {
-      if (typeFilter !== 'All' && l.type !== typeFilter.toLowerCase()) return false;
-      if (petFilter && !l.petFriendly) return false;
-      if (search && !l.title.toLowerCase().includes(search.toLowerCase()) && !l.address.toLowerCase().includes(search.toLowerCase())) return false;
-      return true;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'price_asc') return a.price - b.price;
-      if (sortBy === 'price_desc') return b.price - a.price;
-      return 0;
-    });
+        // Type filter
+        if (typeFilter !== 'All' && l.type !== typeFilter.toLowerCase()) return false;
+
+        // Pet filter
+        if (petFilter && !l.petFriendly) return false;
+
+        // Utilities filter
+        if (utilitiesFilter && !l.utilitiesIncluded) return false;
+
+        // Furnished filter
+        if (furnishedFilter && !l.furnished) return false;
+
+        // Bedroom filter
+        if (bedroomFilter !== null) {
+          if (bedroomFilter === 4 && l.bedrooms < 4) return false;
+          else if (bedroomFilter !== 4 && l.bedrooms !== bedroomFilter) return false;
+        }
+
+        // Search
+        if (search) {
+          const q = search.toLowerCase();
+          const matchSearch =
+            l.title.toLowerCase().includes(q) ||
+            l.address.toLowerCase().includes(q) ||
+            l.city.toLowerCase().includes(q) ||
+            l.province.toLowerCase().includes(q);
+          if (!matchSearch) return false;
+        }
+
+        return true;
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case 'price_asc': return a.pricePerTerm[term] - b.pricePerTerm[term];
+          case 'price_desc': return b.pricePerTerm[term] - a.pricePerTerm[term];
+          case 'newest': return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          case 'featured':
+          default:
+            // New listings first, then by date
+            if (a.isNew && !b.isNew) return -1;
+            if (!a.isNew && b.isNew) return 1;
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }
+      });
+  }, [listings, term, sortBy, typeFilter, petFilter, utilitiesFilter, furnishedFilter, bedroomFilter, minPrice, maxPrice, search]);
 
   const toggleHeart = (id: string) => {
     setHearts((prev) => {
@@ -62,11 +109,31 @@ export default function ListingsPage() {
     });
   };
 
+  const activeFilterCount = [
+    typeFilter !== 'All',
+    petFilter,
+    utilitiesFilter,
+    furnishedFilter,
+    bedroomFilter !== null,
+    minPrice > 0 || maxPrice < 5000,
+  ].filter(Boolean).length;
+
+  const clearAllFilters = () => {
+    setTypeFilter('All');
+    setPetFilter(false);
+    setUtilitiesFilter(false);
+    setFurnishedFilter(false);
+    setBedroomFilter(null);
+    setMinPrice(0);
+    setMaxPrice(5000);
+    setSearch('');
+  };
+
   return (
     <div className="ios-page">
       <div style={{ paddingTop: 52, paddingBottom: comparing.size >= 2 ? 80 : 0 }}>
 
-        {/* iOS search bar */}
+        {/* Search bar */}
         <div className="ios-search-bar">
           <div className="ios-search-field">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="ios-search-icon w-4 h-4">
@@ -74,7 +141,7 @@ export default function ListingsPage() {
             </svg>
             <input
               type="text"
-              placeholder="Search listings..."
+              placeholder="City, address, or neighbourhood..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -84,10 +151,10 @@ export default function ListingsPage() {
           </div>
         </div>
 
-        {/* Lease term segmented control */}
+        {/* Controls row */}
         <div className="flex items-center justify-between px-4 py-2">
           <div className="ios-segmented">
-            {(['3', '6', '12'] as const).map((t) => (
+            {([3, 6, 12] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setTerm(t)}
@@ -97,27 +164,220 @@ export default function ListingsPage() {
               </button>
             ))}
           </div>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="ios-footnote"
-            style={{
-              background: 'var(--ios-fill3)',
-              border: 'none',
-              borderRadius: 8,
-              padding: '6px 10px',
-              color: 'var(--ios-label)',
-              outline: 'none',
-              fontSize: 13,
-            }}
-          >
-            <option value="newest">Newest</option>
-            <option value="price_asc">Price Up</option>
-            <option value="price_desc">Price Down</option>
-          </select>
+          <div className="flex items-center gap-2">
+            {/* Filter button */}
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors"
+              style={{
+                background: showFilters ? 'var(--ios-blue)' : 'var(--ios-fill3)',
+                color: showFilters ? '#fff' : 'var(--ios-label)',
+                fontSize: 13,
+                fontWeight: 500,
+                border: 'none',
+                cursor: 'pointer',
+                position: 'relative',
+              }}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+              Filters
+              {activeFilterCount > 0 && (
+                <span style={{
+                  background: 'var(--ios-red)',
+                  color: '#fff',
+                  fontSize: 10,
+                  fontWeight: 700,
+                  width: 16,
+                  height: 16,
+                  borderRadius: 8,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+            {/* Sort */}
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              style={{
+                background: 'var(--ios-fill3)',
+                border: 'none',
+                borderRadius: 8,
+                padding: '6px 10px',
+                color: 'var(--ios-label)',
+                outline: 'none',
+                fontSize: 13,
+                fontWeight: 500,
+              }}
+            >
+              <option value="featured">Featured</option>
+              <option value="newest">Newest</option>
+              <option value="price_asc">Price ↑</option>
+              <option value="price_desc">Price ↓</option>
+            </select>
+          </div>
         </div>
 
-        {/* Property type filter pills */}
+        {/* Expandable filter panel */}
+        {showFilters && (
+          <div
+            className="mx-4 mb-3"
+            style={{
+              background: 'var(--ios-grouped-bg2)',
+              borderRadius: 16,
+              padding: '16px 16px 12px',
+              boxShadow: 'var(--ios-shadow-sm)',
+              border: '0.5px solid var(--ios-sep)',
+            }}
+          >
+            {/* Price range */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="ios-footnote" style={{ fontWeight: 600, color: 'var(--ios-label)' }}>Price Range</span>
+                <span className="ios-footnote" style={{ color: 'var(--ios-blue)' }}>
+                  ${minPrice.toLocaleString()} – ${maxPrice >= 5000 ? '5,000+' : maxPrice.toLocaleString()}/mo
+                </span>
+              </div>
+              <div style={{ position: 'relative', height: 40 }}>
+                <input
+                  type="range"
+                  min={0}
+                  max={5000}
+                  step={100}
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(Math.min(Number(e.target.value), maxPrice - 100))}
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: 4,
+                    WebkitAppearance: 'none',
+                    appearance: 'none',
+                    background: 'transparent',
+                    pointerEvents: 'none',
+                    top: 8,
+                  }}
+                />
+                <input
+                  type="range"
+                  min={0}
+                  max={5000}
+                  step={100}
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Math.max(Number(e.target.value), minPrice + 100))}
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: 4,
+                    WebkitAppearance: 'none',
+                    appearance: 'none',
+                    background: 'transparent',
+                    pointerEvents: 'none',
+                    top: 8,
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Bedrooms */}
+            <div className="mb-3">
+              <span className="ios-footnote" style={{ fontWeight: 600, color: 'var(--ios-label)', display: 'block', marginBottom: 8 }}>Bedrooms</span>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { label: 'Any', value: null },
+                  { label: 'Studio', value: 0 },
+                  { label: '1', value: 1 },
+                  { label: '2', value: 2 },
+                  { label: '3', value: 3 },
+                  { label: '4+', value: 4 },
+                ].map((opt) => (
+                  <button
+                    key={opt.label}
+                    onClick={() => setBedroomFilter(opt.value)}
+                    className="ios-pill"
+                    style={{
+                      background: bedroomFilter === opt.value ? 'var(--ios-blue)' : 'var(--ios-fill3)',
+                      color: bedroomFilter === opt.value ? '#fff' : 'var(--ios-label)',
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Property type */}
+            <div className="mb-3">
+              <span className="ios-footnote" style={{ fontWeight: 600, color: 'var(--ios-label)', display: 'block', marginBottom: 8 }}>Property Type</span>
+              <div className="flex flex-wrap gap-2">
+                {propertyTypes.map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setTypeFilter(t)}
+                    className="ios-pill"
+                    style={{
+                      background: typeFilter === t ? 'var(--ios-blue)' : 'var(--ios-fill3)',
+                      color: typeFilter === t ? '#fff' : 'var(--ios-label)',
+                    }}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Toggle filters */}
+            <div className="flex flex-wrap gap-3 mb-3">
+              <button
+                onClick={() => setPetFilter(!petFilter)}
+                className="ios-pill"
+                style={{
+                  background: petFilter ? 'rgba(52,199,89,0.12)' : 'var(--ios-fill3)',
+                  color: petFilter ? 'var(--ios-green)' : 'var(--ios-label)',
+                }}
+              >
+                🐾 Pet Friendly
+              </button>
+              <button
+                onClick={() => setUtilitiesFilter(!utilitiesFilter)}
+                className="ios-pill"
+                style={{
+                  background: utilitiesFilter ? 'rgba(0,122,255,0.12)' : 'var(--ios-fill3)',
+                  color: utilitiesFilter ? 'var(--ios-blue)' : 'var(--ios-label)',
+                }}
+              >
+                💡 Utilities Incl.
+              </button>
+              <button
+                onClick={() => setFurnishedFilter(!furnishedFilter)}
+                className="ios-pill"
+                style={{
+                  background: furnishedFilter ? 'rgba(175,82,222,0.12)' : 'var(--ios-fill3)',
+                  color: furnishedFilter ? 'var(--ios-purple)' : 'var(--ios-label)',
+                }}
+              >
+                🛋️ Furnished
+              </button>
+            </div>
+
+            {/* Clear filters */}
+            {activeFilterCount > 0 && (
+              <button
+                onClick={clearAllFilters}
+                className="ios-btn-text"
+                style={{ fontSize: 14 }}
+              >
+                Clear all filters
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Quick type pills (always visible) */}
         <div className="ios-scroll-x py-1" style={{ gap: 6, paddingBottom: 4 }}>
           {propertyTypes.map((t) => (
             <button
@@ -132,13 +392,14 @@ export default function ListingsPage() {
             onClick={() => setPetFilter(!petFilter)}
             className={`ios-pill ${petFilter ? 'ios-pill-green' : 'ios-pill-gray'}`}
           >
-            Pets
+            🐾 Pets
           </button>
         </div>
 
         {/* Result count */}
         <p className="px-4 py-2 ios-caption1">
           {filtered.length} {filtered.length === 1 ? 'property' : 'properties'} available
+          {search && <> for &ldquo;{search}&rdquo;</>}
         </p>
 
         {/* Listings */}
@@ -153,13 +414,18 @@ export default function ListingsPage() {
               </svg>
             </div>
             <p className="ios-headline mb-1">No Results</p>
-            <p className="ios-subhead">Try adjusting your search or filters</p>
+            <p className="ios-subhead mb-4">Try adjusting your search or filters</p>
+            {activeFilterCount > 0 && (
+              <button onClick={clearAllFilters} className="ios-btn-text" style={{ fontSize: 15 }}>
+                Clear all filters
+              </button>
+            )}
           </div>
         ) : (
-          <div className="px-4 space-y-3 pb-6">
+          <div className="px-4 space-y-3 pb-6 animate-stagger">
             {filtered.map((listing) => (
               <div key={listing.id} style={{ position: 'relative' }}>
-                {/* Compare checkbox overlay */}
+                {/* Compare checkbox */}
                 <button
                   onClick={() => toggleCompare(listing.id)}
                   style={{
@@ -186,11 +452,11 @@ export default function ListingsPage() {
                     </svg>
                   )}
                 </button>
-                <Link href={`/listings/${listing.id}`} className="ios-listing-card block">
-                  <div className="ios-listing-image" style={{ height: 200, aspectRatio: 'unset', overflow: 'hidden' }}>
+                <Link href={`/listings/${listing.id}`} className="ios-listing-card ios-card-lift block">
+                  <div style={{ height: 200, position: 'relative', overflow: 'hidden' }}>
                     <div style={{
                       position: 'absolute', inset: 0,
-                      background: `linear-gradient(135deg, hsl(${(parseInt(listing.id) * 47) % 360}, 45%, 82%) 0%, hsl(${((parseInt(listing.id) * 47) + 50) % 360}, 50%, 75%) 100%)`,
+                      background: galleryGradients[parseInt(listing.id) % galleryGradients.length],
                     }} />
                     <div style={{
                       position: 'absolute', inset: 0,
@@ -210,9 +476,13 @@ export default function ListingsPage() {
                   <div className="px-4 py-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <p className="ios-listing-price">${adjustedPrice(listing.price).toLocaleString()}<span>/mo</span></p>
+                        <p className="ios-listing-price">
+                          ${listing.pricePerTerm[term].toLocaleString()}<span>/mo</span>
+                        </p>
                         <p className="ios-headline mt-0.5" style={{ fontSize: 16 }}>{listing.title}</p>
-                        <p className="ios-subhead mt-0.5 truncate" style={{ fontSize: 13 }}>{listing.address}</p>
+                        <p className="ios-subhead mt-0.5 truncate" style={{ fontSize: 13 }}>
+                          {listing.address}, {listing.city}, {listing.province}
+                        </p>
                       </div>
                       <div
                         className="flex-shrink-0 rounded-[10px] px-2 py-1 text-[11px] font-semibold capitalize"
@@ -221,18 +491,26 @@ export default function ListingsPage() {
                         {listing.type}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 mt-3">
+                    <div className="flex items-center gap-2 mt-3 flex-wrap">
                       <span className="ios-pill ios-pill-gray" style={{ fontSize: 11 }}>
                         {listing.bedrooms === 0 ? 'Studio' : `${listing.bedrooms} bed`}
                       </span>
                       <span className="ios-pill ios-pill-gray" style={{ fontSize: 11 }}>
                         {listing.bathrooms} bath
                       </span>
-                      <span className="ios-pill ios-pill-gray" style={{ fontSize: 11 }}>
-                        {listing.sqft.toLocaleString()} sqft
-                      </span>
-                      {listing.utilities && (
+                      {listing.squareFootage && (
+                        <span className="ios-pill ios-pill-gray" style={{ fontSize: 11 }}>
+                          {listing.squareFootage.toLocaleString()} sqft
+                        </span>
+                      )}
+                      {listing.utilitiesIncluded && (
                         <span className="ios-pill ios-pill-blue" style={{ fontSize: 11 }}>Utilities</span>
+                      )}
+                      {listing.petFriendly && (
+                        <span className="ios-pill ios-pill-green" style={{ fontSize: 11 }}>🐾 Pets</span>
+                      )}
+                      {listing.furnished && (
+                        <span className="ios-pill ios-pill-orange" style={{ fontSize: 11 }}>🛋️ Furnished</span>
                       )}
                     </div>
                   </div>
@@ -259,7 +537,6 @@ export default function ListingsPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              animation: 'slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1)',
             }}
           >
             <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ios-label)' }}>
@@ -305,13 +582,6 @@ export default function ListingsPage() {
         )}
 
       </div>
-
-      <style>{`
-        @keyframes slideUp {
-          from { transform: translateY(100%); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-      `}</style>
     </div>
   );
 }
