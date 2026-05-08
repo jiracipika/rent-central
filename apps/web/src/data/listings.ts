@@ -639,7 +639,7 @@ export const listings: Property[] = [
     photos: [],
     coverPhoto: '',
     availableFrom: new Date('2026-05-01'),
-    minimumLeaseTerm: 8,
+    minimumLeaseTerm: 6,
     createdAt: new Date('2026-03-22'),
     isNew: true,
   },
