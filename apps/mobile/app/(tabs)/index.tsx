@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,10 +8,20 @@ import {
   FlatList,
   Platform,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  withDelay,
+  Easing,
+  interpolate,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { ListingCard } from '@/components/ListingCard';
-import { colors, shadow, radius } from '@/lib/theme';
+import { colors, shadow, radius, animation } from '@/lib/theme';
 import { formatCurrency } from '@rent-central/core';
 import type { Property } from '@rent-central/core';
 
@@ -117,6 +127,64 @@ function PropertyGradient({ type }: { type: string }) {
   );
 }
 
+// Animated pressable wrapper for scale feedback + haptics
+function AnimatedPressable({ children, onPress, style }: {
+  children: unknown;
+  onPress: () => void;
+  style?: object;
+}) {
+  const scale = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withTiming(0.97, { duration: 100, easing: Easing.out(Easing.quad) });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+  const handlePressOut = () => {
+    scale.value = withSpring(1, {
+      damping: animation.spring.damping,
+      stiffness: animation.spring.stiffness,
+      mass: animation.spring.mass,
+    });
+  };
+
+  return (
+    <Animated.View style={[style, animatedStyle]}>
+      <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress}>
+        {children as never}
+      </Pressable>
+    </Animated.View>
+  );
+}
+
+// Section header entrance animation
+function AnimatedSectionTitle({ title }: { title: string }) {
+  const entrance = useSharedValue(0);
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(entrance.value, [0, 1], [0, 1]),
+    transform: [{ translateY: interpolate(entrance.value, [0, 1], [8, 0]) }],
+  }));
+
+  useEffect(() => {
+    entrance.value = withDelay(200, withSpring(1, {
+      damping: animation.spring.damping,
+      stiffness: animation.spring.stiffness,
+      mass: animation.spring.mass,
+    }));
+  }, [entrance]);
+
+  return (
+    <Animated.Text style={[
+      { fontSize: 20, fontWeight: '700', color: colors.text, letterSpacing: -0.4 },
+      animatedStyle,
+    ]}>
+      {title}
+    </Animated.Text>
+  );
+}
+
 export default function HomeScreen() {
   const [query, setQuery] = useState('');
 
@@ -125,7 +193,7 @@ export default function HomeScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
         {/* Header */}
         <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 12 }}>
-          <Text style={{ fontSize: 28, fontWeight: '700', color: colors.text, letterSpacing: -0.5 }}>
+          <Text style={{ fontSize: 28, fontWeight: '700', color: colors.text, letterSpacing: -0.6 }}>
             Rent Central
           </Text>
           <Text style={{ fontSize: 15, color: colors.textMuted, marginTop: 2 }}>
@@ -133,14 +201,17 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {/* Search bar */}
-        <Pressable
+        {/* Search bar — glass */}
+        <AnimatedPressable
           style={{ marginHorizontal: 20, marginBottom: 20 }}
           onPress={() => router.push('/(tabs)/search')}
         >
           <View style={{
-            flexDirection: 'row', alignItems: 'center', backgroundColor: colors.card,
-            borderRadius: radius.xl, paddingHorizontal: 14, paddingVertical: 12,
+            flexDirection: 'row', alignItems: 'center',
+            backgroundColor: colors.glassCard,
+            borderRadius: radius.xl, paddingHorizontal: 14, paddingVertical: 14,
+            borderWidth: 1, borderColor: colors.glassBorder,
+            minHeight: 48,
             ...shadow.sm,
           }}>
             <Text style={{ fontSize: 16, marginRight: 8, color: colors.textMuted }}>🔍</Text>
@@ -148,9 +219,9 @@ export default function HomeScreen() {
               City, postal code, address…
             </Text>
           </View>
-        </Pressable>
+        </AnimatedPressable>
 
-        {/* City pills */}
+        {/* City pills — glass with min 44pt height */}
         <View style={{ marginBottom: 24 }}>
           <ScrollView
             horizontal
@@ -158,19 +229,22 @@ export default function HomeScreen() {
             contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}
           >
             {CITIES.map((city) => (
-              <Pressable
+              <AnimatedPressable
                 key={city.name}
                 onPress={() => router.push('/(tabs)/search')}
-                style={{
-                  flexDirection: 'row', alignItems: 'center', gap: 5,
-                  backgroundColor: colors.card, borderRadius: radius.full,
-                  paddingHorizontal: 14, paddingVertical: 8,
-                  ...shadow.sm,
-                }}
               >
-                <Text style={{ fontSize: 14 }}>{city.emoji}</Text>
-                <Text style={{ fontSize: 13, fontWeight: '500', color: colors.text }}>{city.name}</Text>
-              </Pressable>
+                <View style={{
+                  flexDirection: 'row', alignItems: 'center', gap: 5,
+                  backgroundColor: colors.glassCard, borderRadius: radius.full,
+                  paddingHorizontal: 14, paddingVertical: 10,
+                  minHeight: 44,
+                  borderWidth: 1, borderColor: colors.glassBorder,
+                  ...shadow.sm,
+                }}>
+                  <Text style={{ fontSize: 14 }}>{city.emoji}</Text>
+                  <Text style={{ fontSize: 13, fontWeight: '600', color: colors.text }}>{city.name}</Text>
+                </View>
+              </AnimatedPressable>
             ))}
           </ScrollView>
         </View>
@@ -181,11 +255,12 @@ export default function HomeScreen() {
             flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
             paddingHorizontal: 20, marginBottom: 14,
           }}>
-            <Text style={{ fontSize: 20, fontWeight: '700', color: colors.text, letterSpacing: -0.3 }}>
-              Featured
-            </Text>
-            <Pressable onPress={() => router.push('/(tabs)/search')}>
-              <Text style={{ fontSize: 14, fontWeight: '500', color: colors.primary }}>See all</Text>
+            <AnimatedSectionTitle title="Featured" />
+            <Pressable
+              onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+              onPress={() => router.push('/(tabs)/search')}
+            >
+              <Text style={{ fontSize: 14, fontWeight: '600', color: colors.primary }}>See all</Text>
             </Pressable>
           </View>
           <FlatList
@@ -194,60 +269,65 @@ export default function HomeScreen() {
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 20, gap: 14 }}
-            renderItem={({ item }) => (
-              <Pressable
+            renderItem={({ item, index }) => (
+              <AnimatedPressable
                 onPress={() => router.push(`/listing/${item.id}`)}
-                style={{
-                  width: 280, backgroundColor: colors.card, borderRadius: radius.xl,
-                  overflow: 'hidden', ...shadow.md,
-                }}
               >
-                <View style={{ height: 160 }}>
-                  <PropertyGradient type={item.type} />
-                  {item.isNew && (
-                    <View style={{
-                      position: 'absolute', top: 12, left: 12,
-                      backgroundColor: colors.success,
-                      borderRadius: radius.full, paddingHorizontal: 10, paddingVertical: 4,
-                    }}>
-                      <Text style={{ color: '#fff', fontSize: 11, fontWeight: '600' }}>New</Text>
-                    </View>
-                  )}
-                  <Pressable style={{
-                    position: 'absolute', top: 10, right: 10,
-                    width: 32, height: 32, borderRadius: 16,
-                    backgroundColor: 'rgba(255,255,255,0.9)',
-                    alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <Text style={{ fontSize: 14 }}>♡</Text>
-                  </Pressable>
-                </View>
-                <View style={{ padding: 14 }}>
-                  <Text style={{ fontSize: 18, fontWeight: '700', color: colors.primary }}>
-                    {formatCurrency(item.pricePerTerm[12])}
-                    <Text style={{ fontSize: 12, fontWeight: '400', color: colors.textMuted }}>/mo</Text>
-                  </Text>
-                  <Text style={{ fontSize: 15, fontWeight: '600', color: colors.text, marginTop: 2 }} numberOfLines={1}>
-                    {item.title}
-                  </Text>
-                  <Text style={{ fontSize: 13, color: colors.textMuted, marginTop: 2 }}>
-                    {item.address}, {item.city}
-                  </Text>
-                  <View style={{ flexDirection: 'row', gap: 12, marginTop: 10 }}>
-                    <Text style={{ fontSize: 12, color: colors.textMuted }}>
-                      🛏 {item.bedrooms === 0 ? 'Studio' : `${item.bedrooms} bd`}
-                    </Text>
-                    <Text style={{ fontSize: 12, color: colors.textMuted }}>
-                      🚿 {item.bathrooms} ba
-                    </Text>
-                    {item.squareFootage && (
-                      <Text style={{ fontSize: 12, color: colors.textMuted }}>
-                        📐 {item.squareFootage} sqft
-                      </Text>
+                <View style={{
+                  width: 280, backgroundColor: colors.glassCard, borderRadius: radius.xl,
+                  overflow: 'hidden', borderWidth: 1, borderColor: colors.glassBorder,
+                  ...shadow.md,
+                }}>
+                  <View style={{ height: 160 }}>
+                    <PropertyGradient type={item.type} />
+                    {item.isNew && (
+                      <View style={{
+                        position: 'absolute', top: 12, left: 12,
+                        backgroundColor: colors.primary,
+                        borderRadius: radius.full, paddingHorizontal: 10, paddingVertical: 4,
+                      }}>
+                        <Text style={{ color: '#fff', fontSize: 11, fontWeight: '600' }}>New</Text>
+                      </View>
                     )}
+                    <Pressable
+                      onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+                      style={{
+                        position: 'absolute', top: 10, right: 10,
+                        width: 36, height: 36, borderRadius: 18,
+                        backgroundColor: 'rgba(255,255,255,0.9)',
+                        alignItems: 'center', justifyContent: 'center',
+                      }}
+                    >
+                      <Text style={{ fontSize: 14 }}>♡</Text>
+                    </Pressable>
+                  </View>
+                  <View style={{ padding: 14 }}>
+                    <Text style={{ fontSize: 18, fontWeight: '700', color: colors.primary }}>
+                      {formatCurrency(item.pricePerTerm[12])}
+                      <Text style={{ fontSize: 12, fontWeight: '400', color: colors.textMuted }}>/mo</Text>
+                    </Text>
+                    <Text style={{ fontSize: 15, fontWeight: '600', color: colors.text, marginTop: 2, letterSpacing: -0.2 }} numberOfLines={1}>
+                      {item.title}
+                    </Text>
+                    <Text style={{ fontSize: 13, color: colors.textMuted, marginTop: 2 }}>
+                      {item.address}, {item.city}
+                    </Text>
+                    <View style={{ flexDirection: 'row', gap: 12, marginTop: 10 }}>
+                      <Text style={{ fontSize: 12, color: colors.textMuted }}>
+                        🛏 {item.bedrooms === 0 ? 'Studio' : `${item.bedrooms} bd`}
+                      </Text>
+                      <Text style={{ fontSize: 12, color: colors.textMuted }}>
+                        🚿 {item.bathrooms} ba
+                      </Text>
+                      {item.squareFootage && (
+                        <Text style={{ fontSize: 12, color: colors.textMuted }}>
+                          📐 {item.squareFootage} sqft
+                        </Text>
+                      )}
+                    </View>
                   </View>
                 </View>
-              </Pressable>
+              </AnimatedPressable>
             )}
           />
         </View>
@@ -258,21 +338,23 @@ export default function HomeScreen() {
             flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
             marginBottom: 14,
           }}>
-            <Text style={{ fontSize: 20, fontWeight: '700', color: colors.text, letterSpacing: -0.3 }}>
-              Near You
-            </Text>
-            <Pressable onPress={() => router.push('/(tabs)/search')}>
-              <Text style={{ fontSize: 14, fontWeight: '500', color: colors.primary }}>See all</Text>
+            <AnimatedSectionTitle title="Near You" />
+            <Pressable
+              onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+              onPress={() => router.push('/(tabs)/search')}
+            >
+              <Text style={{ fontSize: 14, fontWeight: '600', color: colors.primary }}>See all</Text>
             </Pressable>
           </View>
-          {NEARBY.map((listing) => (
-            <Pressable
+          {NEARBY.map((listing, index) => (
+            <AnimatedPressable
               key={listing.id}
               onPress={() => router.push(`/listing/${listing.id}`)}
-              style={{ marginBottom: 14 }}
             >
-              <ListingCard listing={listing} />
-            </Pressable>
+              <View style={{ marginBottom: 14 }}>
+                <ListingCard listing={listing} index={index} />
+              </View>
+            </AnimatedPressable>
           ))}
         </View>
       </ScrollView>

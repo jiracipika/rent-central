@@ -2,20 +2,21 @@
 // Apple-inspired design tokens for consistent UI
 
 export const colors = {
-  // Brand
-  primary: '#007AFF',
-  primaryLight: '#E3F2FF',
-  primaryDark: '#0056CC',
+  // Brand — Emerald/Teal gradient for rent/property
+  primary: '#10B981',
+  primaryLight: '#D1FAE5',
+  primaryDark: '#059669',
+  accent: '#14B8A6',
+  accentLight: '#CCFBF1',
+  accentDark: '#0D9488',
   
   // Semantic
-  accent: '#34C759',
-  accentLight: '#E8F9ED',
   error: '#FF3B30',
   errorLight: '#FFE5E3',
   warning: '#FF9500',
   warningLight: '#FFF4E0',
-  success: '#34C759',
-  successLight: '#E8F9ED',
+  success: '#10B981',
+  successLight: '#D1FAE5',
   info: '#5AC8FA',
   infoLight: '#E5F6FF',
 
@@ -54,12 +55,24 @@ export const colors = {
   labelTertiary: 'rgba(60,60,67,0.3)',
   
   // Tab bar
-  tabBar: 'rgba(249,249,249,0.94)',
+  tabBar: 'rgba(249,249,249,0.82)',
   tabBarInactive: '#8E8E93',
   
   // Glass
   glass: 'rgba(255,255,255,0.72)',
   glassDark: 'rgba(255,255,255,0.85)',
+  glassCard: 'rgba(255,255,255,0.65)',
+  glassCardDark: 'rgba(28,28,30,0.72)',
+  glassBorder: 'rgba(255,255,255,0.6)',
+  glassBorderDark: 'rgba(255,255,255,0.12)',
+};
+
+// Gradient presets for primary accent elements
+export const gradients = {
+  primary: ['#10B981', '#14B8A6'],
+  primaryExtended: ['#10B981', '#14B8A6', '#0D9488'],
+  accentSoft: ['rgba(16,185,129,0.12)', 'rgba(20,184,166,0.12)'],
+  priceText: ['#10B981', '#0D9488'],
 };
 
 export const spacing = {
@@ -130,8 +143,9 @@ export const typography = {
 
 // Animation presets
 export const animation = {
-  spring: { damping: 20, stiffness: 300, mass: 0.8 },
-  springGentle: { damping: 25, stiffness: 200, mass: 1 },
-  timing: { duration: 250 },
-  timingSlow: { duration: 400 },
+  spring: { damping: 18, stiffness: 320, mass: 0.8 },
+  springGentle: { damping: 22, stiffness: 200, mass: 1 },
+  springBouncy: { damping: 12, stiffness: 400, mass: 0.7 },
+  timing: { duration: 200 },
+  timingSlow: { duration: 350 },
 };

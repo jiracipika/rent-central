@@ -1,9 +1,17 @@
 import { useState, useMemo } from 'react';
 import { View, Text, ScrollView, Pressable, TextInput, FlatList } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { ListingCard } from '@/components/ListingCard';
-import { colors, radius, shadow } from '@/lib/theme';
+import { colors, radius, shadow, animation } from '@/lib/theme';
 import type { Property, PropertyType } from '@rent-central/core';
 
 const ALL_LISTINGS: Property[] = [
@@ -29,13 +37,58 @@ const TYPE_FILTERS: { label: string; value: PropertyType | 'all' }[] = [
 
 const BED_FILTERS = ['Any', '0', '1', '2', '3+'];
 
+// Animated chip component with scale(0.97) press feedback + haptics
+function AnimatedChip({ label, active, onPress }: {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+}) {
+  const scale = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withTiming(0.97, { duration: 100, easing: Easing.out(Easing.quad) });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+  const handlePressOut = () => {
+    scale.value = withSpring(1, {
+      damping: animation.spring.damping,
+      stiffness: animation.spring.stiffness,
+      mass: animation.spring.mass,
+    });
+  };
+
+  return (
+    <Animated.View style={animatedStyle}>
+      <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress}>
+        <View style={{
+          paddingHorizontal: 14, paddingVertical: 9,
+          borderRadius: radius.full, minHeight: 36,
+          backgroundColor: active ? colors.primary : colors.glassCard,
+          borderWidth: 1,
+          borderColor: active ? colors.primary : colors.glassBorder,
+          ...shadow.sm,
+        }}>
+          <Text style={{
+            fontSize: 13, fontWeight: '600',
+            color: active ? '#fff' : colors.text,
+          }}>
+            {label}
+          </Text>
+        </View>
+      </Pressable>
+    </Animated.View>
+  );
+}
+
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<PropertyType | 'all'>('all');
   const [bedFilter, setBedFilter] = useState('Any');
   const [petFriendly, setPetFriendly] = useState(false);
   const [sortBy, setSortBy] = useState<'newest' | 'price_asc' | 'price_desc'>('newest');
-  const [showFilters, setShowFilters] = useState(false);
 
   const results = useMemo(() => {
     let list = ALL_LISTINGS.filter((l) => {
@@ -56,16 +109,24 @@ export default function SearchScreen() {
     return list;
   }, [query, typeFilter, bedFilter, petFriendly, sortBy]);
 
+  const cycleSort = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setSortBy(sortBy === 'newest' ? 'price_asc' : sortBy === 'price_asc' ? 'price_desc' : 'newest');
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.groupedBackground }} edges={['top']}>
-      {/* Search input */}
+      {/* Search input — glass */}
       <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: 10 }}>
-        <Text style={{ fontSize: 28, fontWeight: '700', color: colors.text, letterSpacing: -0.5, marginBottom: 12 }}>
+        <Text style={{ fontSize: 28, fontWeight: '700', color: colors.text, letterSpacing: -0.6, marginBottom: 12 }}>
           Search
         </Text>
         <View style={{
-          flexDirection: 'row', alignItems: 'center', backgroundColor: colors.card,
-          borderRadius: radius.xl, paddingHorizontal: 14, paddingVertical: 10,
+          flexDirection: 'row', alignItems: 'center',
+          backgroundColor: colors.glassCard,
+          borderRadius: radius.xl, paddingHorizontal: 14, paddingVertical: 12,
+          minHeight: 48,
+          borderWidth: 1, borderColor: colors.glassBorder,
           ...shadow.sm,
         }}>
           <Text style={{ fontSize: 16, marginRight: 8, color: colors.textMuted }}>🔍</Text>
@@ -82,7 +143,7 @@ export default function SearchScreen() {
         </View>
       </View>
 
-      {/* Type filter chips */}
+      {/* Type filter chips — glass + 44pt */}
       <View style={{ marginBottom: 8 }}>
         <ScrollView
           horizontal
@@ -90,28 +151,17 @@ export default function SearchScreen() {
           contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}
         >
           {TYPE_FILTERS.map((f) => (
-            <Pressable
+            <AnimatedChip
               key={f.value}
+              label={f.label}
+              active={typeFilter === f.value}
               onPress={() => setTypeFilter(f.value)}
-              style={{
-                paddingHorizontal: 14, paddingVertical: 7,
-                borderRadius: radius.full,
-                backgroundColor: typeFilter === f.value ? colors.primary : colors.card,
-                ...shadow.sm,
-              }}
-            >
-              <Text style={{
-                fontSize: 13, fontWeight: '500',
-                color: typeFilter === f.value ? '#fff' : colors.text,
-              }}>
-                {f.label}
-              </Text>
-            </Pressable>
+            />
           ))}
         </ScrollView>
       </View>
 
-      {/* Filter row */}
+      {/* Filter row — glass chips */}
       <View style={{
         flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20,
         paddingVertical: 10, gap: 8,
@@ -119,51 +169,31 @@ export default function SearchScreen() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             {BED_FILTERS.map((b) => (
-              <Pressable
+              <AnimatedChip
                 key={b}
+                label={b === 'Any' ? 'Any beds' : b === '0' ? 'Studio' : `${b} bd`}
+                active={bedFilter === b}
                 onPress={() => setBedFilter(b)}
-                style={{
-                  paddingHorizontal: 12, paddingVertical: 6, borderRadius: radius.full,
-                  backgroundColor: bedFilter === b ? colors.primaryLight : colors.fill,
-                  borderWidth: bedFilter === b ? 1 : 0,
-                  borderColor: colors.primary,
-                }}
-              >
-                <Text style={{
-                  fontSize: 12, fontWeight: '500',
-                  color: bedFilter === b ? colors.primary : colors.textSecondary,
-                }}>
-                  {b === 'Any' ? 'Any beds' : b === '0' ? 'Studio' : `${b} bd`}
-                </Text>
-              </Pressable>
+              />
             ))}
-            <Pressable
+            <AnimatedChip
+              label="🐾 Pet OK"
+              active={petFriendly}
               onPress={() => setPetFriendly(!petFriendly)}
-              style={{
-                paddingHorizontal: 12, paddingVertical: 6, borderRadius: radius.full,
-                backgroundColor: petFriendly ? colors.primaryLight : colors.fill,
-                borderWidth: petFriendly ? 1 : 0,
-                borderColor: colors.primary,
-              }}
-            >
-              <Text style={{
-                fontSize: 12, fontWeight: '500',
-                color: petFriendly ? colors.primary : colors.textSecondary,
-              }}>
-                🐾 Pet OK
-              </Text>
-            </Pressable>
+            />
           </View>
         </ScrollView>
         <Pressable
-          onPress={() => setSortBy(sortBy === 'newest' ? 'price_asc' : sortBy === 'price_asc' ? 'price_desc' : 'newest')}
+          onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+          onPress={cycleSort}
           style={{
-            paddingHorizontal: 10, paddingVertical: 6, borderRadius: radius.md,
+            paddingHorizontal: 10, paddingVertical: 9, borderRadius: radius.md,
+            minHeight: 36,
             backgroundColor: colors.fill, flexDirection: 'row', alignItems: 'center', gap: 4,
           }}
         >
           <Text style={{ fontSize: 12 }}>↕</Text>
-          <Text style={{ fontSize: 12, fontWeight: '500', color: colors.textSecondary }}>
+          <Text style={{ fontSize: 12, fontWeight: '600', color: colors.textSecondary }}>
             {sortBy === 'newest' ? 'Newest' : sortBy === 'price_asc' ? 'Price ↑' : 'Price ↓'}
           </Text>
         </Pressable>
@@ -189,9 +219,12 @@ export default function SearchScreen() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 32, gap: 14 }}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <Pressable onPress={() => router.push(`/listing/${item.id}`)}>
-              <ListingCard listing={item} />
+          renderItem={({ item, index }) => (
+            <Pressable
+              onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+              onPress={() => router.push(`/listing/${item.id}`)}
+            >
+              <ListingCard listing={item} index={index} />
             </Pressable>
           )}
         />
