@@ -1,59 +1,43 @@
+# Codemagic CI/CD configuration for Rent Central
+# Monorepo: apps/web (Next.js), apps/mobile (Expo), packages/core, packages/ui
+
 workflows:
-  release-both:
-    name: "Rent Central: Build iOS (TestFlight) + Android (Play)"
-    max_build_duration: 120
-    instance_type: mac_mini_m2
+  android-debug:
+    name: Rent Central Android APK
+    max_build_duration: 45
     environment:
-      groups:
-        - app_store_connect
-        - google_play
-      vars:
-        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
-        XCODE_SCHEME: "App"
-        BUNDLE_ID: "com.rentcentral.app"
-        JAVA_HOME: /Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
-        PACKAGE_NAME: "com.rentcentral.app"
-        node: 20
-      android_signing:
-        - akey
-      triggering:
-        events:
-          - push
-        branch_patterns:
-          - pattern: 'main'
-            include: true
-          - pattern: 'master'
-            include: true
+      node: 22
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+      cancel_previous_builds: true
+    cache:
+      cache_paths:
+        - ~/.npm
+        - $CM_BUILD_DIR/node_modules
+        - $CM_BUILD_DIR/apps/mobile/node_modules
     scripts:
-      - name: Set up keystore
+      - name: Install root dependencies
         script: |
-          echo $CM_KEYSTORE | base64 --decode > $CM_KEYSTORE_PATH
-      - name: Install npm dependencies
-        script: |
-          cd apps/mobile
-          npm install
-      - name: Build web app and sync with Capacitor
+          npm ci
+      - name: Install mobile dependencies
         script: |
           cd apps/mobile
-          npm run build
-          npx cap sync android
-          npx cap sync ios
-      - name: Build Android App Bundle
+          npm ci
+      - name: Build shared packages
+        script: |
+          npm run build --workspace @rent-central/core --if-present || true
+      - name: Generate Android native project
+        script: |
+          cd apps/mobile
+          npx expo prebuild --platform android --clean --no-install
+      - name: Build debug APK
         script: |
           cd apps/mobile/android
-          ./gradlew assembleRelease -Pandroid.injected.signing.store.file=$CM_KEYSTORE_PATH -Pandroid.injected.signing.store.password=$CM_KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$CM_KEY_ALIAS -Pandroid.injected.signing.key.password=$CM_KEY_PASSWORD
-          ./gradlew bundleRelease -Pandroid.injected.signing.store.file=$CM_KEYSTORE_PATH -Pandroid.injected.signing.store.password=$CM_KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$CM_KEY_ALIAS -Pandroid.injected.signing.key.password=$CM_KEY_PASSWORD
+          ./gradlew assembleDebug
     artifacts:
-      - apps/mobile/android/app/build/outputs/**/*.aab
-      - apps/mobile/android/app/build/outputs/**/*.apk
-    publishing:
-      email:
-        recipients:
-          - rajingajadhar@gmail.com
-        notify:
-          success: true
-          failure: true
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: internal
-        submit_as_draft: false
+      - apps/mobile/android/app/build/outputs/apk/debug/*.apk
+      - apps/mobile/android/app/build/reports/**/*
