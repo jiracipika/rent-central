@@ -1,14 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { use, useState } from 'react';
 import Link from 'next/link';
 import { formatCurrency } from '@rent-central/core';
 import type { RentalTerm } from '@rent-central/core';
+import { getListingById } from '@/data/listings';
 
 const rentalTerms: RentalTerm[] = [3, 6, 12];
 
-export default function ApplyPage() {
-  const [selectedTerm, setSelectedTerm] = useState<RentalTerm>(12);
+export default function ApplyPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const listing = getListingById(id);
+  const [selectedTerm, setSelectedTerm] = useState<RentalTerm>(listing?.minimumLeaseTerm ?? 12);
+
+  if (!listing) {
+    return (
+      <div className="ios-page" style={{ paddingTop: 100 }}>
+        <div className="text-center px-6">
+          <div className="ios-empty-icon mx-auto mb-4" style={{ fontSize: 32 }}>🏠</div>
+          <h1 className="ios-title3 mb-2">Listing Not Found</h1>
+          <p className="ios-subhead mb-6">This listing may have been removed or is no longer available.</p>
+          <Link href="/listings" className="ios-btn ios-btn-blue" style={{ height: 44, borderRadius: 12, padding: '0 24px', fontSize: 15 }}>
+            Browse Listings
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="ios-page" style={{ paddingBottom: 100 }}>
@@ -17,7 +35,7 @@ export default function ApplyPage() {
         {/* Back nav */}
         <div className="flex items-center gap-2 px-4 pt-3 pb-1">
           <Link
-            href="/listings/1"
+            href={`/listings/${listing.id}`}
             className="ios-btn-text flex items-center gap-1"
             style={{ minHeight: 44 }}
           >
@@ -32,7 +50,7 @@ export default function ApplyPage() {
         <div className="px-4 pb-4">
           <h1 className="ios-large-title" style={{ fontSize: 28 }}>Apply for Rental</h1>
           <p className="ios-subhead mt-1" style={{ color: 'var(--ios-label2)' }}>
-            Modern Downtown Loft · {formatCurrency(2400)}/mo
+            {listing.title} · {formatCurrency(listing.pricePerTerm[selectedTerm])}/mo
           </p>
         </div>
 
@@ -94,7 +112,7 @@ export default function ApplyPage() {
               </div>
               <span className="ios-row-label" style={{ fontSize: 15 }}>{t} months</span>
               <span className="ios-row-value" style={{ fontSize: 14 }}>
-                {formatCurrency(Math.round(2400 * (t === 3 ? 1.15 : t === 6 ? 1.05 : 1)))}/mo
+                {formatCurrency(listing.pricePerTerm[t])}/mo
               </span>
               {selectedTerm === t && (
                 <svg viewBox="0 0 24 24" fill="none" stroke="var(--ios-blue)" strokeWidth={2.5} className="w-5 h-5">
