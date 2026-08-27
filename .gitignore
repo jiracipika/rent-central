@@ -6,3 +6,4 @@ node_modules/
 .vercel
 packages/core/dist/
 packages/ui/dist/
+apps/web/tsconfig.tsbuildinfo
