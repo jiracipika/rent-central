@@ -1,21 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-
-const mockBookmarks = [
-  { id: '1', title: 'Modern Downtown Loft', address: '123 King St W, Toronto, ON', price: 2400, bedrooms: 2, bathrooms: 1, type: 'condo', sqft: 850, utilities: true, furnished: false, petFriendly: true },
-  { id: '4', title: 'Luxury Yaletown Condo', address: '101 Homer St, Vancouver, BC', price: 2800, bedrooms: 2, bathrooms: 2, type: 'condo', sqft: 950, utilities: true, furnished: true, petFriendly: false },
-];
+import { getBookmarks, removeBookmark, type BookmarkedListing } from '@/lib/bookmarks';
 
 export default function BookmarksPage() {
-  const [bookmarks, setBookmarks] = useState(mockBookmarks);
+  const [bookmarks, setBookmarks] = useState<BookmarkedListing[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
-  const removeBookmark = (id: string) => {
+  // Read from the shared bookmark store and keep in sync when a save/remove
+  // happens in another tab or via the custom event from lib/bookmarks.
+  useEffect(() => {
+    const refresh = () => setBookmarks(getBookmarks());
+    refresh();
+    setHydrated(true);
+    window.addEventListener('rentcentral:bookmarks-changed', refresh);
+    window.addEventListener('storage', refresh);
+    return () => {
+      window.removeEventListener('rentcentral:bookmarks-changed', refresh);
+      window.removeEventListener('storage', refresh);
+    };
+  }, []);
+
+  const removeSaved = (id: string) => {
+    removeBookmark(id);
     setBookmarks((prev) => prev.filter((b) => b.id !== id));
   };
 
-  if (bookmarks.length === 0) {
+  if (hydrated && bookmarks.length === 0) {
     return (
       <div className="ios-page">
         <div style={{ paddingTop: 60 }}>
@@ -64,7 +76,8 @@ export default function BookmarksPage() {
                 <div className="ios-listing-image" style={{ height: 200, aspectRatio: 'unset' }}>
                   <span className="text-5xl" style={{ opacity: 0.15 }}>🏠</span>
                   <button
-                    onClick={(e) => { e.preventDefault(); removeBookmark(listing.id); }}
+                    onClick={(e) => { e.preventDefault(); removeSaved(listing.id); }}
+                    aria-label={`Remove ${listing.title} from saved`}
                     className="ios-heart-btn"
                   >
                     <svg viewBox="0 0 24 24" fill="#FF3B30" stroke="#FF3B30" strokeWidth={1.75} className="w-4 h-4">

@@ -1,8 +1,9 @@
 'use client';
 
-import { use, useState, useMemo } from 'react';
+import { use, useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { getListingById, getSimilarListings } from '@/data/listings';
+import { isBookmarked, toggleBookmark } from '@/lib/bookmarks';
 import { formatCurrency } from '@rent-central/core';
 
 const galleryGradients = [
@@ -19,6 +20,32 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
   const [term, setTerm] = useState<3 | 6 | 12>(12);
   const [saved, setSaved] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
+
+  // localStorage is only available after hydration; sync the saved state on
+  // mount (and when the listing id changes) so the heart reflects the store.
+  useEffect(() => {
+    setSaved(isBookmarked(id));
+  }, [id]);
+
+  const toggleSaved = () => {
+    if (!listing) return;
+    const next = toggleBookmark({
+      id: listing.id,
+      title: listing.title,
+      address: `${listing.address}, ${listing.city}, ${listing.province}`,
+      city: listing.city,
+      province: listing.province,
+      price: listing.pricePerTerm[12],
+      bedrooms: listing.bedrooms,
+      bathrooms: listing.bathrooms,
+      type: listing.type,
+      sqft: listing.squareFootage ?? 0,
+      utilities: listing.utilitiesIncluded,
+      furnished: listing.furnished,
+      petFriendly: listing.petFriendly,
+    });
+    setSaved(next);
+  };
 
   if (!listing) {
     return (
@@ -66,7 +93,8 @@ export default function ListingDetail({ params }: { params: Promise<{ id: string
           </Link>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setSaved(!saved)}
+              onClick={toggleSaved}
+              aria-label={saved ? 'Remove from saved listings' : 'Save listing'}
               className="w-9 h-9 flex items-center justify-center rounded-lg tap-scale"
               style={{ color: saved ? 'var(--ios-red)' : 'var(--ios-blue)' }}
             >
