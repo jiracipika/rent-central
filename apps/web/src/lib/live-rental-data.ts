@@ -42,7 +42,7 @@ export type LiveListing = {
   highlights: string[];
 };
 
-type RentBenchmarks = {
+export type RentBenchmarks = {
   city: string;
   month: string;
   studio?: number;
@@ -70,7 +70,7 @@ let statCanCache:
 const LISTING_CACHE_TTL_MS = 10 * 60 * 1000;
 const listingCache = new Map<string, { expiresAt: number; listings: LiveListing[] }>();
 
-function normalizeKey(value: string): string {
+export function normalizeKey(value: string): string {
   return value
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
@@ -79,7 +79,7 @@ function normalizeKey(value: string): string {
     .trim();
 }
 
-function seededInt(seed: string, min: number, max: number): number {
+export function seededInt(seed: string, min: number, max: number): number {
   let hash = 0;
   for (let i = 0; i < seed.length; i += 1) {
     hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
@@ -93,7 +93,7 @@ function extractNumericValue(value: string): number | undefined {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
 }
 
-function parseCSVLine(line: string): string[] {
+export function parseCSVLine(line: string): string[] {
   const fields: string[] = [];
   let current = '';
   let inQuotes = false;
@@ -218,7 +218,7 @@ async function loadStatCanRentBenchmarks(): Promise<{ byCity: Map<string, RentBe
   return { byCity, latestMonth };
 }
 
-function inferProvince(geocoded: Coordinates, fallback?: string): string {
+export function inferProvince(geocoded: Coordinates, fallback?: string): string {
   if (fallback) return fallback;
   const province = geocoded.admin1;
   if (!province) return '';
@@ -315,7 +315,7 @@ async function fetchOSMBuildings(city: Coordinates, limit = 120): Promise<OSMEle
   return payload.elements ?? [];
 }
 
-function guessPropertyType(tags: Record<string, string> | undefined): LiveListing['propertyType'] {
+export function guessPropertyType(tags: Record<string, string> | undefined): LiveListing['propertyType'] {
   const building = (tags?.building ?? '').toLowerCase();
 
   if (building.includes('house')) return 'house';
@@ -325,7 +325,7 @@ function guessPropertyType(tags: Record<string, string> | undefined): LiveListin
   return 'apartment';
 }
 
-function estimateBedrooms(tags: Record<string, string> | undefined, seed: string): number {
+export function estimateBedrooms(tags: Record<string, string> | undefined, seed: string): number {
   const levelCount = Number(tags?.['building:levels']);
   if (Number.isFinite(levelCount) && levelCount > 0) {
     if (levelCount <= 2) return seededInt(seed, 1, 2);
@@ -336,7 +336,7 @@ function estimateBedrooms(tags: Record<string, string> | undefined, seed: string
   return seededInt(seed, 0, 3);
 }
 
-function estimateSizeSqft(bedrooms: number, seed: string): number {
+export function estimateSizeSqft(bedrooms: number, seed: string): number {
   if (bedrooms <= 0) return seededInt(seed, 380, 590);
   if (bedrooms === 1) return seededInt(seed, 520, 780);
   if (bedrooms === 2) return seededInt(seed, 760, 1080);
@@ -344,7 +344,7 @@ function estimateSizeSqft(bedrooms: number, seed: string): number {
   return seededInt(seed, 1300, 2200);
 }
 
-function priceFromBenchmark(bench: RentBenchmarks | undefined, bedrooms: number, seed: string): number {
+export function priceFromBenchmark(bench: RentBenchmarks | undefined, bedrooms: number, seed: string): number {
   const variability = seededInt(seed, -180, 240);
 
   let baseline: number | undefined;
@@ -357,7 +357,7 @@ function priceFromBenchmark(bench: RentBenchmarks | undefined, bedrooms: number,
   return Math.max(800, Math.round((baseline ?? fallback) + variability));
 }
 
-function deriveHighlights(tags: Record<string, string> | undefined, seed: string): string[] {
+export function deriveHighlights(tags: Record<string, string> | undefined, seed: string): string[] {
   const options = [
     'Transit-friendly location',
     'Walkable neighbourhood',
@@ -384,7 +384,7 @@ function deriveHighlights(tags: Record<string, string> | undefined, seed: string
   return arr;
 }
 
-function toLiveListing(element: OSMElement, city: string, province: string, benchmark: RentBenchmarks | undefined): LiveListing | null {
+export function toLiveListing(element: OSMElement, city: string, province: string, benchmark: RentBenchmarks | undefined): LiveListing | null {
   const lat = element.center?.lat ?? element.lat;
   const lon = element.center?.lon ?? element.lon;
 
