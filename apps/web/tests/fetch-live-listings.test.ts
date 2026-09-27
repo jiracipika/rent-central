@@ -344,10 +344,11 @@ describe('fetchLiveListings: response cache', () => {
     // Documented quirk: the cache-hit branch reports the month-less variant.
     expect(second.sourceSummary).toBe(CACHED_SUMMARY);
 
-    // A different option set is a different cache key -> fetches resume.
+    // A different option set is a different cache key -> fetches resume and a
+    // fresh array is built (the cached hit above returns the stored one).
     const third = await fetchLiveListings({ city: 'Cacheford', limit: 41 });
     expect(fetchMock.mock.calls.length).toBeGreaterThan(callsAfterFirst);
-    expect(third.listings).not.toEqual(first.listings);
+    expect(third.listings).not.toBe(first.listings);
   });
 
   it('expires the cache entry after the 10 minute TTL and refetches', async () => {
